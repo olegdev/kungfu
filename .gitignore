@@ -1,0 +1,7 @@
+/client/js/references
+/log
+node_modules
+vendor
+/server/services/dictionary/ru
+/*.sublime-project
+/*.sublime-workspace

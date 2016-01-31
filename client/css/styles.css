@@ -1,0 +1,248 @@
+@font-face {
+	font-family: tin;
+	src: url("fonts/inglobal.ttf") format("opentype");
+}
+
+#location, #battle {
+	width: 600px;
+	height: 300px;
+	margin: 150px auto 0 auto;
+	font-family: tin;
+	position: relative;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+}
+
+#location .location-title,
+#window .window-title {
+	background-color: rgb(240, 249, 245);
+	height: 40px;
+	text-align: center;
+	color: #357F96;
+	border-radius: 3px;
+	line-height: 36px;
+    font-size: 18px;
+}
+
+/**
+ * Всплывающее окошко
+ */
+#window {
+	position: absolute;
+	top: 150px;
+	border: 1px solid #ccc;
+	background-color: #fff;
+	border-radius: 3px;
+	font-family: tin;
+}
+#window .window-close {
+	position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 40px;
+    height: 40px;
+    background: #E89B62;
+    cursor: pointer;
+    font-size: 32px;
+    color: #fff;
+    font-family: arial;
+    text-align: center;
+}
+#window-mask {
+	width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 1;
+    background-color: #fff;
+}
+
+/**
+ * Аватарка юзера с ником
+ */
+.user-avatar {
+	width: 200px;
+	height: 56px;
+	color: #357F96;
+}
+.user-avatar img {
+	border: 1px solid #357F96;
+	border-radius: 35px;
+	float: right;
+}
+.user-avatar.rtl img {
+	float: none;
+}
+.user-avatar.empty img {
+	border: none;
+	opacity: 0.4;
+}
+.user-avatar span {
+	font-weight: bold;
+	font-size: 16px;
+	float: right;
+    display: block;
+    text-align: center;
+    width: 148px;
+    height: 44px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 5px;
+}
+.user-avatar span.loading {
+	background-image: url(../img/loader4.gif);
+	background-repeat: no-repeat;
+    background-position: 50%;
+}
+/**
+ * Информация о игроке на главной странице
+ */
+#infoview-box {
+	width: 200px;
+	overflow: hidden;
+	float: left;
+    padding: 36px 0 0 36px;
+    margin-right: 83px;
+    color: #357F96;
+    border-radius: 3px;
+}
+#infoview-box table {
+	margin: 10px 0 0 18px;
+}
+#infoview-box td {
+	padding: 0px 5px 11px 0;
+}
+#infoview-box td:nth-child(even) {
+	font-weight: bold;
+}
+
+#controlsview-box {
+	width: 232px;
+	overflow: hidden;
+	padding-top: 44px;
+}
+#controlsview-box ul {
+	margin: -5px 0 0 0;
+}
+#controlsview-box li {
+	padding: 5px 0;
+}
+#controlsview-box li button {
+	height: 46px;
+	width: 210px;
+	background-color: #1ECA1E;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    font-family: tin;
+    font-size: 14px;
+}
+#controlsview-box #rating-btn {
+	background-color: #567DBF;
+}
+
+/**
+ * Оппоненты (x VS y)
+ */
+.opponents {
+	margin: 36px 0 0 36px;
+}
+
+.opponents .user-avatar {
+ 	display: inline-block;
+    overflow: hidden;
+ }
+
+ .opponents .vs-sign {
+    display: inline-block;
+    overflow: hidden;
+    height: 56px;
+    line-height: 56px;
+    padding: 0 42px;
+    font-size: 18px;
+    font-size: 18px;
+    color: #E89B62;
+    font-weight: bold;
+}
+
+/**
+ * Окно поиска противника
+ **/
+#battle-search-window .hints {
+    padding: 40px;
+    text-align: center;
+    vertical-align: middle;
+    background-color: rgb(240, 249, 245);
+    margin: 48px 0px 0;
+    border: 1px solid #ccc;
+    border-width: 1px 0 0 0;
+    height: 35px;
+    overflow: hidden;
+    border-radius: 3px;
+}
+
+/**
+ * Бой
+ */
+#battle {
+	margin: 50px auto 0 auto;
+	border: none;
+	height: auto;
+}
+#battle .opponents {
+	margin: 18px 0 0 36px;
+}
+#battle-enemy .field .cell {
+	-webkit-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+}
+#battle .field {
+	width: 321px;
+    height: 314px;
+    border: 1px solid #ccc;
+    margin: 7px auto;
+    border-radius: 3px;
+    padding-top: 5px;
+    text-align: center;
+}
+#battle .field .cell {
+	width: 55px;
+	height: 55px;
+	line-height: 54px;
+	display: inline-block;
+    text-transform: uppercase;
+    font-size: 22px;
+    background-color: #E0E0E0;
+    opacity: 0.4;
+    border-radius: 5px;
+    border: 2px solid #fff;
+    overflow: hidden;
+}
+#battle .field .cell.fill {
+	cursor: pointer;
+    background-color: #e0e0e0;
+    opacity: 1;
+    color: #444;
+}
+#battle .field .cell.fill:hover {
+	background-color: #c7c7c7;
+}
+
+
+#s1,#s2 {
+	font-size: 0px;
+	font-weight: bold;
+	color: red;
+	font-family: tin;
+	transition: font-size 0.7s cubic-bezier(0.4, 0, 1, 1), opacity 1.7s cubic-bezier(0.4, 0, 1, 1), left 0.7s cubic-bezier(0.4, 0, 1, 1);
+	position: absolute;
+	top: 250px;
+	left: 950px;
+	z-index: 1;
+}
+#s1 {
+	transition: font-size 0.7s cubic-bezier(0.4, 0, 1, 1), opacity 1.7s cubic-bezier(0.4, 0, 1, 1), left 0.7s cubic-bezier(0.4, 0, 1, 1);
+}
