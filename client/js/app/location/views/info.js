@@ -13,7 +13,7 @@ define([
 		template: _.template(tpl),
 
 		render: function() {
-			this.$el.html(this.template({data: this.model.attributes, messages: messages, userAvatarView: userAvatarView}));
+			this.$el.html(this.template({data: APP.user.attributes, messages: messages, userAvatarView: userAvatarView}));
 			return this;
 		}
 	});

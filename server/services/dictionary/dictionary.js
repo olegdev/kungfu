@@ -10,22 +10,23 @@ var mongoose = require('mongoose');
 var _ = require('underscore');
 
 var Service = function() {
-	this.words = [];
+	this.dictionary = {};
 }
 
 // перезагрузка словаря (используется поставщиком данных, например, грантом)
-Service.prototype.setData = function(data, callback) {
-	var me = this;
+Service.prototype.setData = function(version, data, callback) {
+	var me = this,
+		dictionaryModel = mongoose.model('dictionary');
 
-	data = _.map(data, function(v) {
-		return {value: v};
-	});
-
-	mongoose.model('words').find().remove(function(err) {
+	dictionaryModel.find().remove(function(err) {
 		if (!err) {
-			mongoose.model('words').collection.insert(data, function(err) {
+			var dictionary = new dictionaryModel({
+				version: version,
+				words: data,
+			});
+			dictionary.save(function(err) {
 				if (!err) {
-					callback();
+					callback(null);
 				} else {
 					callback(err);
 				}
@@ -40,13 +41,11 @@ Service.prototype.setData = function(data, callback) {
 Service.prototype.load = function(callback) {
 	var me = this;
 
-	me.words = [];
+	me.dictionary = {};
 
-	mongoose.model('words').find().lean().exec(function(err, words) {
+	mongoose.model('dictionary').findOne().lean().exec(function(err, json) {
 		if (!err) {
-			me.words = _.map(words, function(w) {
-				return w.value;
-			});
+			me.dictionary = json;
 			callback();
 		} else {
 			callback(error.factory('dictionary', 'load', 'DB error ' + err, logger));
@@ -58,7 +57,7 @@ Service.prototype.load = function(callback) {
 Service.prototype.hasWord = function(word) {
 	var me = this;
 	if (word) {
-		return me.words.indexOf(word.toLowerCase()) != -1;
+		return me.dictionary.words.indexOf(word.toLowerCase()) != -1;
 	}
 }
 
@@ -67,10 +66,10 @@ Service.prototype.getWordByLength = function(wordLength) {
 	var me = this,
 		word;
 	while(!word) {
-		var randomIndex = _.random(0, me.words.length);
-		for(var i = randomIndex; i < me.words.length; i++) {
-			if (me.words[i].length == wordLength) {
-				word = me.words[i];
+		var randomIndex = _.random(0, me.dictionary.words.length);
+		for(var i = randomIndex; i < me.dictionary.words.length; i++) {
+			if (me.dictionary.words[i].length == wordLength) {
+				word = me.dictionary.words[i];
 				break;
 			}
 		}

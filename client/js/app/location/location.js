@@ -14,10 +14,8 @@ define([
 	'references/messages'
 ], function($, _, Backbone, BattleSearch, InfoView, ControlsView, windowView, mainTpl, messages) {
 
-	var userModel;
-
 	var onFightClick = function() {
-		BattleSearch.search(userModel);
+		BattleSearch.search();
 
 		// setTimeout(function() {
 		// 	$('#s1').css({'font-size': '150px', opacity: '0', left: '731px'});
@@ -39,20 +37,16 @@ define([
 	}
 
 	return {
-		render: function(user) {
-
-			userModel = user;
+		render: function() {
 
 			$(document.body).html(_.template(mainTpl)({messages: messages}));
 
 			var infoView = new InfoView({
 				el: $('#infoview-box'),
-				model: userModel,
 			});
 
 			var controlsView = new ControlsView({
 				el: $('#controlsview-box'),
-				model: userModel,
 				events: {
 					'click #fight-btn': onFightClick,
 					'click #rating-btn': onRatingClick,

@@ -29,17 +29,16 @@ var initLetters = function() {
 
 Service.prototype.factory = function(userModel, userModel2) {
 	var me = this,
-		letters = initLetters(),
 		battle = {
 			id: userModel.id + '_' + userModel2.id,
 			fieldSize: config.fieldSize,
 			side1: {
 				u: userModel,
-				letters: letters,
+				letters: initLetters(),
 			},
 			side2: {
 				u: userModel2,
-				letters: letters,
+				letters: initLetters(),
 			}
 		};
 	return battle;
