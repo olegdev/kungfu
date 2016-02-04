@@ -15,17 +15,8 @@ var Service = function() {
 
 var initField = function() {
 	var innerInitLetters = function() {
-		var seed = dictionary.getWordByLength(config.columns*2).split(""),
-			index1, index2, tmp;
-		// mix seed
-		for(var i = 0; i < 50; i++) {
-			index1 = _.random(0, seed.length-1);
-			index2 = _.random(0, seed.length-1);
-			tmp = seed[index2];
-			seed[index2] = seed[index1];
-			seed[index1] = tmp;
-		}
-		return seed;
+		var seed = dictionary.getRandomWord(config.columns*2);
+		return dictionary.mixWord(seed).split("");
 	}
 
 	var field = [],

@@ -1,6 +1,7 @@
 GLOBAL.BASE_PATH = __dirname;
 GLOBAL.SERVICES_PATH = __dirname + '/server/services';
 GLOBAL.API_PATH = __dirname + '/server/api';
+GLOBAL.CONFIG = require(BASE_PATH + '/server/util').getModuleConfig(__filename);
 
 var express = require('express');
 var cookieParser = require('cookie-parser');

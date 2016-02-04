@@ -62,20 +62,47 @@ Service.prototype.hasWord = function(word) {
 }
 
 // выдает случайное слово соответствующей длины
-Service.prototype.getWordByLength = function(wordLength) {
+Service.prototype.getRandomWord = function(wordLength) {
 	var me = this,
 		word;
 	while(!word) {
 		var randomIndex = _.random(0, me.dictionary.words.length);
-		for(var i = randomIndex; i < me.dictionary.words.length; i++) {
-			if (me.dictionary.words[i].length == wordLength) {
-				word = me.dictionary.words[i];
-				break;
+		if (wordLength) {
+			for(var i = randomIndex; i < me.dictionary.words.length; i++) {
+				if (me.dictionary.words[i].length == wordLength) {
+					word = me.dictionary.words[i];
+					break;
+				}
 			}
+		} else {
+			word = me.dictionary.words[randomIndex];
 		}
 	}
 	return word;
 }
+
+// выдает случайную букву 
+Service.prototype.getRandomLetter = function() {
+	var me = this,
+		word = me.getRandomWord(),
+		randomIndex = _.random(0, word.length-1);
+	return word[randomIndex];
+}
+
+// перемешивает буквы в слове
+Service.prototype.mixWord = function(word) {
+	var index1, index2, tmp;
+	word = word.split('');
+	for(var i = 0; i < 10; i++) {
+		index1 = _.random(0, word.length-1);
+		index2 = _.random(0, word.length-1);
+		tmp = word[index2];
+		word[index2] = word[index1];
+		word[index1] = tmp;
+	}
+	return word.join('');
+}
+
 
 // Создает только один экземпляр класса
 Service.getInstance = function() {

@@ -4,6 +4,7 @@
 */
 var logger = require(SERVICES_PATH + '/logger/logger')(__filename);
 var onlineList = require(SERVICES_PATH + '/onlinelist/onlinelist');
+var messages = require(SERVICES_PATH + '/references/messages/messages');
 
 var Service = function() {
 	this.clients = {};
@@ -95,7 +96,15 @@ Service.prototype._onPush = function(client, data, callback) {
 	if (me.channels[data.channel]) {
 		if (me.channels[data.channel].listeners[data.message]) {
 			me.channels[data.channel].listeners[data.message].forEach(function(listener) {
-				listener.fn.call(listener.scope, onlineList.list[client.request.session.uid], data.data, callback);
+				try {
+					listener.fn.call(listener.scope, onlineList.list[client.request.session.uid], data.data, callback);
+				} catch(e) {
+					if (CONFIG.debug) {
+						throw(e);
+					} else {
+						me.errorChannel.push(client.request.session.uid, "error", {msg: messages.getByKey('msg_internal_error')});
+					}
+				}
 			});
 		} else {
 			/***/ logger.warn('sockets: Channel listener for message "' + data.message + '" not found');	
