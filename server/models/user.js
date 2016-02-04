@@ -19,7 +19,7 @@ var schema = new mongoose.Schema({
 	},
 	timed: {
 		energy: Array
-	}
+	},
 });
 var model = mongoose.model('users', schema);
 

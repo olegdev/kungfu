@@ -22,20 +22,10 @@ Addon.prototype.getConfig = function() {
 	//
 }
 
-Addon.prototype.get = function(fields) {
+Addon.prototype.get = function(key) {
 	var me = this,
-		data = me.model.get('auth'),
-		result = {};
-
-	if (fields && fields.length) {
-		fields.forEach(function(field) {
-			result[field] = data[field];
-		});
-	} else {
-		result = data;
-	}
-
-	return result;
+		data = me.model.get('auth');
+	return key ? data[key] : data;
 }
 
 module.exports = Service;

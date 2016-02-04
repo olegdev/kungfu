@@ -27,7 +27,7 @@ API.prototype.cmdCancel = function(userModel, params) {
 }
 
 API.prototype.pushEnemy = function(userModel, enemyModel) {
-	this.channel.push(userModel.id, 'enemy', enemyModel.get('info;stats;'));
+	this.channel.push(userModel.id, 'enemy', enemyModel.asJson('info;stats;'));
 }
 
 // Создает только один экземпляр класса

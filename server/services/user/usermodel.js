@@ -41,7 +41,9 @@ var UserModel = function(model, addons) {
 
 UserModel.prototype.getConfig = function(callback) {
 	var me = this,
-		config = {};
+		config = {
+			id: me.id,
+		};
 
 	Object.keys(me.addons).forEach(function(addonName) {
 		if (typeof me.addons[addonName].getConfig == 'function') {
@@ -54,10 +56,12 @@ UserModel.prototype.getConfig = function(callback) {
 	callback(null, config);
 }
 
-UserModel.prototype.get = function(path) {
+UserModel.prototype.asJson = function(path) {
 	var me = this,
 		addons = {},
-		result = {};
+		result = {
+			id: me.id,
+		};
 
 	path.split(';').forEach(function(addonPath) {
 		if (addonPath) {
@@ -72,13 +76,45 @@ UserModel.prototype.get = function(path) {
 
 	Object.keys(addons).forEach(function(addonName) {
 		if (me.addons[addonName] && typeof me.addons[addonName].get == 'function') {
-			result[addonName] = me.addons[addonName].get(addons[addonName]);
+			if (addons[addonName].length) {
+				result[addonName] = {};
+				addons[addonName].forEach(function(key) {
+					result[addonName][key] = me.addons[addonName].get(key);
+				});
+			} else {
+				result[addonName] = me.addons[addonName].get();
+			}
 		} else {
 			/****/ logger.warn('usermodel@get Unknown addon "' + addonName + '" or addon does not provide method get');	
 		}
 	});
 
 	return result;
+}
+
+UserModel.prototype.get = function(addonName, key) {
+	var me = this;
+
+	if (me.addons[addonName] && typeof me.addons[addonName].get == 'function') {
+		return me.addons[addonName].get(key);
+	} else {
+		/****/ logger.warn('usermodel@get Unknown addon "' + addonName + '" or addon does not provide method get');	
+	}
+}
+
+UserModel.prototype.set = function(addonName, key, value) {
+	var me = this;
+
+	if (!value) {
+		value = key;
+		key = undefined;
+	}
+
+	if (me.addons[addonName] && typeof me.addons[addonName].set == 'function') {
+		me.addons[addonName].set(key, value);
+	} else {
+		/****/ logger.warn('usermodel@get Unknown addon "' + addonName + '" or addon does not provide method set');	
+	}
 }
 
 // Создает только один экземпляр класса

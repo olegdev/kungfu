@@ -24,7 +24,7 @@ API.prototype.cmdNewGame = function(userModel, params, callback) {
 		if (!game.opponent) {
 			game.opponent = {
 				uid: userModel.id,
-				login: userModel.model.get('auth.login'),
+				login: userModel.model.asJson('auth.login'),
 				letters: [],
 				level: 1,
 				levels: {},

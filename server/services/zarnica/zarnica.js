@@ -28,7 +28,7 @@ Service.prototype.createGame = function(userModel) {
 		},
 		creator: {
 			uid: userModel.id,
-			login: userModel.model.get('auth.login'),
+			login: userModel.model.asJson('auth.login'),
 			letters: [],
 			level: 1,
 			levels: {}

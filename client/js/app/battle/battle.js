@@ -7,26 +7,45 @@ define([
 	'underscore',
 	'backbone',
 	'sockets/sockets',
-	'app/models/battle',
 	'battle/views/battle_container',
-], function($, _, Backbone, sockets, BattleModel, BattleContainerView) {
+], function($, _, Backbone, sockets, BattleContainerView) {
 
-	var channel = sockets.createChannel('battle');
+	var channel = sockets.createChannel('battle'),
+		battle;
+
+	/*** API listeners */
 	channel.on('start', function(data) {
-		battle = new BattleModel(data);
-		startBattle();
+		showBattle(data);
 	});
 
-	var battle; // Модель боя
+	/*** Старт боя */
+	var showBattle = function(data) {
+		var side1, side2;
 
-	// Старт боя
-	var startBattle = function() {
+		if (data.battle.sides[0].u.id == APP.user.attributes.id) {
+			side1 = data.battle.sides[0];
+			side2 = data.battle.sides[1];
+		} else {
+			side1 = data.battle.sides[1];
+			side2 = data.battle.sides[0];
+		}
+
 		var battleContainerView = new BattleContainerView({
-			model: battle,
+			side1: side1,
+			side2: side2,
+			fieldSize: data.battle.fieldSize,
+		});
+
+		battleContainerView.on('submit', function(word) {
+			channel.push('word', {word});
 		});
 	}
 
 	return {
-		//
+		loadAndShow: function() {
+			channel.push('get_battle', {}, function(data) {
+				showBattle(data);
+			});
+		}
 	};
 });

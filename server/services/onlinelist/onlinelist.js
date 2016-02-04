@@ -6,9 +6,17 @@ var config = require(BASE_PATH + '/server/util').getModuleConfig(__filename);
 var logger = require(SERVICES_PATH + '/logger/logger')(__filename);
 var error = require(SERVICES_PATH + '/error');
 var user = require(SERVICES_PATH + '/user/user');
+var _ = require('underscore');
 
 var Service = function() {
-	this.list = {};
+	var me = this;
+
+	me.list = {};
+
+	me.interval = setInterval(function() {
+		me.gc();
+	}, 60*1000);
+
 }
 
 Service.prototype.add = function(uid, callback) {
@@ -31,14 +39,29 @@ Service.prototype.add = function(uid, callback) {
 			}
 		});
 	} else {
+		me.list[uid].disconnected = false;
 		callback(null);
 	}
 }
 
 Service.prototype.remove = function(uid, callback) {
 	var me = this;
-	me.list[uid] = undefined;
+	if (me.list[uid]) {
+		me.list[uid].disconnected = true;
+	}
 	callback(null);
+}
+
+Service.prototype.gc = function() {
+	var me = this;
+	Object.keys(me.list).forEach(function(key) {
+		if (me.list[key].disconnected && _.isEmpty(me.list[key].bindings)) {
+			me.list[me.list[key].id] = undefined;
+		}
+	});
+
+	/***/ logger.info("onlinelist@gc Online: "+ Object.keys(me.list).length);
+
 }
 
 // Создает только один экземпляр класса

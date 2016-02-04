@@ -22,19 +22,10 @@ Addon.prototype.getConfig = function() {
 	return this.model.get('timed');
 }
 
-Addon.prototype.get = function(fields) {
+Addon.prototype.get = function(key) {
 	var me = this,
-		data = me.model.get('timed'),
-		result = {};
-
-	if (fields && fields.length) {
-		fields.forEach(function(field) {
-			result[field] = data[field];
-		});
-	} else {
-		result = data;
-	}
-	return result;
+		data = me.model.get('timed');
+	return key ? data[key] : data;
 }
 
 module.exports = Service;

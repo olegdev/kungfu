@@ -4,9 +4,11 @@ define([
 
 	var Model = Backbone.Model.extend({
 
+		id: '',
 		info: {},
 		stats: {},
 		timed: '',
+		bindings: {},
 
 		initialize: function() {
 			//

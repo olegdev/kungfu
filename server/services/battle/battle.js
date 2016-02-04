@@ -14,35 +14,36 @@ var Service = function() {
 	me.battles = {}; // ссылки на текущие бои; ключем является id боя
 }
 
+Service.prototype.getBattleById = function(battleId) {
+	return this.battles[battleId];
+}
+
 Service.prototype.createBattle = function(userModel, userModel2) {
 	var me = this;
 
 	var battle = battleFactory.factory(userModel, userModel2);
-	me.battles[battle.id] = battle;
+	me.battles[battle.id] = battle; 
 
-	this.api.pushStart(userModel, {side: 1, battle: this.battleAsJson(battle.id)});
-	this.api.pushStart(userModel2, {side:2, battle: this.battleAsJson(battle.id)});
+	userModel.set('bindings', 'battle', battle.id);
+	userModel2.set('bindings', 'battle', battle.id);
+
+	me.api.pushStart(userModel, {battle: me.battleAsJson(battle.id)});
+	me.api.pushStart(userModel2, {battle: me.battleAsJson(battle.id)});
 }
 
 Service.prototype.battleAsJson = function(battleId) {
 	var me = this,
 		battle = me.battles[battleId];
 	if (battle) {
-		return {
-			id: battle.id,
-			fieldSize: battle.fieldSize,
-			side1: {
-				u: battle.side1.u.get('info;stats;'),
-				letters: battle.side1.letters,
-			},
-			side2: {
-				u: battle.side2.u.get('info;stats;'),
-				letters: battle.side2.letters,
-			}
-		}
+		return battle.asJson();
 	} else {
 		return {};
 	}
+}
+
+Service.prototype.onUserWord = function(userModel, data) {
+	var me = this,
+		battleId = userModel.get('bindings', 'battle');
 }
 
 // Создает только один экземпляр класса

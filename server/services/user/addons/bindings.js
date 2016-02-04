@@ -1,21 +1,22 @@
 /**
- * Ник, картинка и прочее инфо
+ * Привязки игрока
  */
 var logger = require(SERVICES_PATH + '/logger/logger')(__filename);
 var error = require(SERVICES_PATH + '/error');
 var mongoose = require("mongoose");
+var _ = require("underscore");
 
 var Service = {
-	factory: function(model) {
-		return new Addon(model);
+	factory: function() {
+		return new Addon();
 	}
 }
 
 /**
  * Класс аддона
  */
-var Addon = function(model) {
-	this.model = model;
+var Addon = function() {
+	this.bindings = {};
 }
 
 Addon.prototype.getConfig = function() {
@@ -23,9 +24,16 @@ Addon.prototype.getConfig = function() {
 }
 
 Addon.prototype.get = function(key) {
-	var me = this,
-		data = me.model.get('info');
-	return key ? data[key] : data;
+	return key ? this.bindings[key] : this.bindings;
+}
+
+Addon.prototype.set = function(key, value) {
+	var me = this;
+	if (key) {
+		me.bindings[key] = value;
+	} else {
+		me.bindings = value;
+	}
 }
 
 module.exports = Service;

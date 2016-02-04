@@ -195,7 +195,7 @@
 #battle .opponents {
 	margin: 18px 0 0 36px;
 }
-#battle-enemy .field .cell {
+#battle-side2 .field .cell {
 	-webkit-transform: rotate(180deg);
 	-moz-transform: rotate(180deg);
     -o-transform: rotate(180deg);
@@ -216,20 +216,65 @@
 	display: inline-block;
     text-transform: uppercase;
     font-size: 22px;
-    background-color: #E0E0E0;
-    opacity: 0.4;
+    background-color: #F1E9E9;
     border-radius: 5px;
     border: 2px solid #fff;
     overflow: hidden;
 }
-#battle .field .cell.fill {
+#battle .field .cell .letter {
 	cursor: pointer;
-    background-color: #e0e0e0;
-    opacity: 1;
+    background-color: #AFCBE6 /*#e0e0e0*/;
     color: #444;
 }
-#battle .field .cell.fill:hover {
-	background-color: #c7c7c7;
+#battle .field .cell .letter.selected {
+	background-color: #7CA5CC;
+}
+#battle .field .cell .letter.submit {
+	background-color: #41EC6C;
+	cursor: default;
+}
+
+/** Контейнер слова **/
+#word-container {
+	width: 535px;
+	height: 50px;
+    text-align: center;
+    background-color: #FBFBFB;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    padding: 6px 0;
+    margin:	20px auto 0;
+}
+#word-container.valid li {
+	background-color: #41EC6C;
+	cursor: pointer;
+}
+#word-container.more-letters li {
+	width: 35px;
+}
+#word-container li {
+	width: 50px;
+    height: 50px;
+    line-height: 50px;
+    display: inline-block;
+    background-color: #F9BD82;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 18px;
+    font-style: italic;
+}
+#word-container li:first-child {
+	border-radius: 3px 0 0 3px;
+}
+#word-container li:last-child {
+	border-radius: 0 3px 3px 0;
+}
+#word-container .hint {
+	font-size: 17px;
+	display: inline-block;
+	margin-top: 15px;
+	font-style: italic;
+	color: #444;
 }
 
 
