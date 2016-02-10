@@ -12,7 +12,7 @@ define([
 
 	var View = Backbone.View.extend({
 
-		model: {}, // модель боя
+		isBusy: false, // признак занятости (выставляется перед анимацией удара)
 
 		// @cfg
 		// side1
@@ -32,12 +32,12 @@ define([
 
 			this.side1Field = new BattleSide1View({
 				fieldSize: this.config.fieldSize,
-				field: this.config.side1.field,
+				letters: this.config.side1.letters,
 			});
 
 			this.side2Field = new BattleSide2View({
 				fieldSize: this.config.fieldSize,
-				field: this.config.side2.field,
+				letters: this.config.side2.letters,
 			});
 			this.side1Field.on('submit', function(word) {
 				me.trigger('submit', word);
@@ -46,6 +46,33 @@ define([
 			$('#battle-side1').append(this.side1Field.render().$el);
 			$('#battle-side2').append(this.side2Field.render().$el);
 
+		},
+
+		/**
+		 * Показ удара
+		 */
+		showHit: function(data) {
+			var me = this,
+				field1, field2;
+
+			me.isBusy = true;
+
+			// определяю чей лог пришел
+			if (me.config.side1.u.id == data.owner_id) {
+				field1 = me.side1Field;
+				field2 = me.side2Field;
+			} else {
+				field1 = me.side2Field;
+				field2 = me.side1Field;
+			}
+
+			// показываю анимацию источника
+			field1.showSourceHit(data, function() {
+				// показываю анимацию приёмника
+				field2.showDestHit(data, function() {
+					me.isBusy = false;
+				});
+			});
 		},
 
 	});

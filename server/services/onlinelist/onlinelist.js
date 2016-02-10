@@ -56,7 +56,7 @@ Service.prototype.gc = function() {
 	var me = this;
 	Object.keys(me.list).forEach(function(key) {
 		if (me.list[key].disconnected && _.isEmpty(me.list[key].bindings)) {
-			me.list[me.list[key].id] = undefined;
+			delete me.list[me.list[key].id];
 		}
 	});
 

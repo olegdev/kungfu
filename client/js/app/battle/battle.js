@@ -7,15 +7,20 @@ define([
 	'underscore',
 	'backbone',
 	'sockets/sockets',
-	'battle/views/battle_container',
-], function($, _, Backbone, sockets, BattleContainerView) {
 
-	var channel = sockets.createChannel('battle'),
-		battle;
+	'battle/battle_hits',
+	'battle/views/battle_container',
+
+], function($, _, Backbone, sockets, BattleHits, BattleContainerView) {
+
+	var channel = sockets.createChannel('battle');
 
 	/*** API listeners */
 	channel.on('start', function(data) {
 		showBattle(data);
+	});
+	channel.on('hit', function(data) {
+		processHit(data);
 	});
 
 	/*** Старт боя */
@@ -39,6 +44,13 @@ define([
 		battleContainerView.on('submit', function(word) {
 			channel.push('word', {word});
 		});
+
+		BattleHits.init(battleContainerView);
+	}
+
+	/*** Пришел удар */
+	var processHit = function(data) {
+		BattleHits.processHit(data.hit);
 	}
 
 	return {

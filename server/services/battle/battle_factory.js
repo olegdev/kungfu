@@ -13,60 +13,69 @@ var Service = function() {
 	var me = this;
 }
 
-var initField = function() {
+var initLetters = function(battle) {
 	var innerInitLetters = function() {
 		var seed = dictionary.getRandomWord(config.columns*2);
 		return dictionary.mixWord(seed).split("");
 	}
 
-	var field = [],
-		letters = innerInitLetters(),
-		row, cell;
+	var letters = {},
+		inititalLetters = innerInitLetters(),
+		id;
 
-	for(var i = 0; i < config.rows; i++) {
-		row = [];
+	for(var i = 0; i < 2; i++) {
 		for(var j = 0; j < config.columns; j++) {
-			cell = {index: i+' '+j};
-			if (letters[config.columns*i + j]) {
-				cell.letter = letters[config.columns*i + j];
-			}
-			row.push(cell);
+			id = battle.genLocalId('ltr');
+			letters[id] = {
+				id: id,
+				row: i,
+				column: j,
+				letter: inititalLetters[i*config.rows + j],
+			};
 		}
-		field.push(row);
 	}
 
-	return field;
+	return letters;
 }
 
 Service.prototype.factory = function(userModel, userModel2) {
 	var me = this,
 		battle = {
-			id: userModel.id + '_' + userModel2.id,
+			id: _.uniqueId('btl_'),
 			sides: [{
 				u: userModel,
-				field: initField(),
 			}, {
 				u: userModel2,
-				field: initField(),
 			}],
 			fieldSize: {
 				rows: config.rows,
 				columns: config.columns,
 			},
+			hitIndex: 0,
 			asJson: function() {
 				return {
 					id: this.id,
 					fieldSize: this.fieldSize,
 					sides: [{
 						u: this.sides[0].u.asJson('info;stats;'),
-						field: this.sides[0].field,
+						letters: this.sides[0].letters,
 					},{
 						u: this.sides[1].u.asJson('info;stats;'),
-						field: this.sides[1].field,
+						letters: this.sides[1].letters,
 					}]
 				}
+			},
+			genLocalId: function(prefix) {
+				if (!me[prefix + '_counter']) {
+					me[prefix + '_counter'] = 0;
+				}
+				return prefix + (me[prefix + '_counter']++);
 			}
 		};
+
+	battle.sides[0].letters = initLetters(battle);
+	battle.sides[1].letters = initLetters(battle);
+
 	return battle;
 }
 

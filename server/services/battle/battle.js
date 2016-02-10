@@ -48,15 +48,108 @@ Service.prototype.onWord = function(userModel, data, callback) {
 		battleId = userModel.get('bindings', 'battle'),
 		battle = me.battles[battleId],
 		side1, side2,
-		hit = {
-			ownerId: userModel.id,
-			src: [],
-			dest: [],
+		hit,
+		word = '',
+
+		innerCompactAndGetColumns = function(letters) {
+			var columns = [];
+			
+			for(var i = 0; i < battle.fieldSize.columns; i++) {
+				columns.push(new Array(battle.fieldSize.rows));
+			}
+
+			_.each(letters, function(item) {
+				columns[item.column][item.row] = item;
+			});
+
+			for(var i = 0; i < battle.fieldSize.columns; i++) {
+				columns[i] = _.compact(columns[i]);
+			}
+
+			return columns;
 		},
-		word = '';
+
+		innerFillSrc = function(letters) {
+			var columns = innerCompactAndGetColumns(letters),
+				column, id;
+
+			// смещаю буквы в колонках вниз, если есть свободное поле
+			for(var i = 0; i < battle.fieldSize.columns; i++) {
+				column = columns[i];
+				for(var j = 0; j < column.length; j++) {
+					column[j].row = j;
+					column[j].column = i;
+				}
+			}
+
+			// генерирую случайную букву, если в первых двух строках свободное место
+			for(var i = 0; i < battle.fieldSize.columns; i++) {
+				if (columns[i].length == 0) {
+					id = battle.genLocalId('ltr');
+					letters[id] = {
+						id: id,
+						row: 0,
+						column: i,
+						letter: dictionary.getRandomLetter(),
+					};
+					id = battle.genLocalId('ltr');
+					letters[id] = {
+						id: id,
+						row: 1,
+						column: i,
+						letter: dictionary.getRandomLetter(),
+					};
+				} else if (columns[i].length == 1) {
+					id = battle.genLocalId('ltr');
+					letters[id] = {
+						id: id,
+						row: 1,
+						column: i,
+						letter: dictionary.getRandomLetter(),
+					};
+				}
+			}
+		},
+
+		innerFillDest = function(letters, word) {
+			var columns = innerCompactAndGetColumns(letters),
+				index = 0, id, letter, freeCells = [],
+
+				getFreeCells = function() {
+					var cells = [], rowIndex = 2;
+					while(!cells.length && rowIndex < battle.fieldSize.rows) {
+						for(var i = 0; i < columns.length; i++) {
+							if (!columns[i][rowIndex]) {
+								cells.push({row: rowIndex, column: i});
+							}
+						}
+						rowIndex++;
+					}
+					return cells;
+				}
+
+			word = dictionary.mixWord(word);
+			freeCells = getFreeCells();
+
+			while(freeCells.length && index < word.length) {
+				var cell = freeCells[_.random(0, freeCells.length-1)];
+				id = battle.genLocalId('ltr');
+				letters[id] = {
+					id: id,
+					row: cell.row,
+					column: cell.column,
+					letter: word.charAt(index++),
+				};
+				columns[cell.column][cell.row] = letters[id];
+				freeCells = getFreeCells();
+			}
+
+			return freeCells.length == 0;
+		}
 
 	if (battle) {
 
+		// определяю данные сторон (сторона 1 - отправитель, 2- получатель)
 		if (battle.sides[0].u.id == userModel.id) {
 			side1 = battle.sides[0];
 			side2 = battle.sides[1];
@@ -65,10 +158,10 @@ Service.prototype.onWord = function(userModel, data, callback) {
 			side2 = battle.sides[0];
 		}
 	
+		// проверка слова
 		data.word.forEach(function(item) {
-			var cellIndex = item.index.split(' ');
-			if (side1.field[cellIndex[0]][cellIndex[1]]) {
-				word += side1.field[cellIndex[0]][cellIndex[1]].letter;
+			if (side1.letters[item.id]) {
+				word += side1.letters[item.id].letter;
 			}
 		});
 
@@ -76,43 +169,27 @@ Service.prototype.onWord = function(userModel, data, callback) {
 			if (dictionary.hasWord(word)) {
 				
 				// обновляю состояние источника
-				data.word.forEach(function(item) {
-					var cellIndex = item.index.split(' ');
-					if (cellIndex[0] == 0 || cellIndex[0] == 1) {
-						side1.field[cellIndex[0]][cellIndex[1]].letter = dictionary.getRandomLetter();
-					} else {
-						side1.field[cellIndex[0]][cellIndex[1]].letter = undefined;
-					}
-					hit.src.push(side1.field[cellIndex[0]][cellIndex[1]]);
-				});
 				side1.isFull = false;
+				data.word.forEach(function(item) {
+					delete side1.letters[item.id];
+				});
+				innerFillSrc(side1.letters);
 
 				// обновляю состояние получателя
-				word = dictionary.mixWord(word);
 				if (side2.isFull) {
 					side2.isFinished = true;
 				} else {
-					for(var i = 2, done; i < side2.field.length && !done; i++) {
-						for(var j = 0; j < side2.field[i].length && !done; j++) {
-							if (!side2.field[i][j].letter) {
-								side2.field[i][j].letter = word.charAt(hit.dest.length);
-								hit.dest.push(side2.field[i][j]);
-								if (word.length == hit.dest.length) {
-									done = true;
-								}
-							}
-						}	
-					}
-					if (i == side2.field.length && j == side2.field[i-1].length) {
-						side2.isFull = true;
-					}
-				}
-
-				if (side2.isFinished) {
-					hit.finished = true;
+					side2.isFull = innerFillDest(side2.letters, word);
 				}
 
 				// рассылаю данные на клиент
+				hit = {
+					index: ++battle.hitIndex,
+					owner_id: userModel.id,
+					src: side1.letters,
+					dest: side2.letters,
+					finished: side2.isFinished,
+				}
 				me.api.pushHit(side1.u, {hit: hit});
 				me.api.pushHit(side2.u, {hit: hit});
 

@@ -195,7 +195,7 @@
 #battle .opponents {
 	margin: 18px 0 0 36px;
 }
-#battle-side2 .field .cell {
+#battle-side2 .field .letter {
 	-webkit-transform: rotate(180deg);
 	-moz-transform: rotate(180deg);
     -o-transform: rotate(180deg);
@@ -206,33 +206,66 @@
     border: 1px solid #ccc;
     margin: 7px auto;
     border-radius: 3px;
-    padding-top: 5px;
     text-align: center;
+}
+#battle .field-inner {
+	margin: 6px 0 0 8px;
+    position: relative;
+    overflow: hidden;
 }
 #battle .field .cell {
 	width: 55px;
 	height: 55px;
 	line-height: 54px;
-	display: inline-block;
+	display: block;
+    background-color: #F1E9E9;
+    border-radius: 5px;
+    float: left;
+    margin: 0 7px 6px 0;
+}
+#battle .field .letter {
+	width: 55px;
+	height: 55px;
+	line-height: 54px;
     text-transform: uppercase;
     font-size: 22px;
     background-color: #F1E9E9;
+    position: absolute;
     border-radius: 5px;
-    border: 2px solid #fff;
-    overflow: hidden;
+    transition: top 1.0s ease;
 }
-#battle .field .cell .letter {
+#battle .field .letter {
 	cursor: pointer;
-    background-color: #AFCBE6 /*#e0e0e0*/;
+    background-color: #AFCBE6;
     color: #444;
 }
-#battle .field .cell .letter.selected {
+#battle .field .letter.selected {
 	background-color: #7CA5CC;
 }
-#battle .field .cell .letter.submit {
+#battle .field .letter.submit {
 	background-color: #41EC6C;
 	cursor: default;
+	z-index: 1;
 }
+#battle .field .letter.src-anim {
+	top: -120px !important;
+	transition: top 0.5s ease;
+}
+#battle .field .letter.src-anim2 {
+	top: 350px !important;
+	transition: top 0.5s ease;
+}
+#battle .field .letter.dest-anim {
+	background-color: #F9BD82 !important;
+	top: -120px;
+	transition: top 0.5s ease;
+}
+#battle .field .letter.dest-anim2 {
+	background-color: #F9BD82;
+	top: 350px;
+	transition: top 0.5s ease;
+}
+
 
 /** Контейнер слова **/
 #word-container {

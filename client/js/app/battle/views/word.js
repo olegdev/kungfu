@@ -23,7 +23,7 @@ define([
 		},
 
 		// @cfg
-		// field - данные поля
+		// letters - хеш букв игрока
 		initialize: function(config) {
 			this.config = config;
 			this.render();
@@ -36,15 +36,14 @@ define([
 			}));
 		},
 
-		addLetter: function(index) {
-			var cellIndex = index.split(' ');
-			this.word.push(this.config.field[cellIndex[0]][cellIndex[1]]);
+		addLetter: function(id) {
+			this.word.push(this.config.letters[id]);
 			this.onChange();
 		},
 
-		removeLetter: function(index) {
+		removeLetter: function(id) {
 			for(var i = 0; i < this.word.length; i++) {
-				if (this.word[i].index == index) {
+				if (this.word[i].id == id) {
 					break;
 				}
 			}

@@ -37,7 +37,7 @@ API.prototype.cmdWord = function(userModel, data) {
 		err = messages.getByKey('msg_invalid_params');
 	} else {
 		data.word.forEach(function(item) {
-			if (!_.isObject(item) || typeof item.index != 'string') {
+			if (!_.isObject(item) || typeof item.id != 'string') {
 				err = messages.getByKey('msg_invalid_params');
 			}
 		});
