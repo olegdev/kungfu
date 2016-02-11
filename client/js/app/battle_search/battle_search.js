@@ -42,24 +42,10 @@ define([
 
 	/** поиск противника */
 	var search = function() {
-		var innerReady = function() {
-			session.set('dictionary_updated', true);
-			channel.push('search', {});
-		}
 		showWindow();
-		if (!session.get('dictionary_updated')) {
-			dictionary.checkUpdate(function(isUpdated) {
-				if (isUpdated) {
-					innerReady();
-				} else {
-					dictionary.load(function() {
-						innerReady();
-					});
-				}
-			});
-		} else {
-			innerReady();
-		}
+		dictionary.checkUpdate(function() {
+			channel.push('search', {});
+		});
 	}
 
 	// противник найден

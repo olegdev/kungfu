@@ -6,7 +6,8 @@ define([
 	'underscore',
 	'backbone',
 	'sockets/sockets',
-], function($, _, Backbone, sockets) {
+	'session/session',
+], function($, _, Backbone, sockets, session) {
 
 	var channel = sockets.createChannel('dictionary'),
 		dictionary = {};
@@ -17,13 +18,27 @@ define([
 	}
 
 	return {
+		// проверяет словарь на наличие обновлений и загружает, если нужно
 		checkUpdate: function(callback) {
-			if (dictionary.version) {
-				channel.push('get_version', {}, function(data) {
-					callback(dictionary.version == data.version);
-				});
+			var me = this;
+			if (session.get('dictionary_updated')) {
+				callback();
 			} else {
-				callback(false);
+				if (dictionary.version) {
+					channel.push('get_version', {}, function(data) {
+						if (dictionary.version != data.version) {
+							me.load(function() {
+								callback();
+							})
+						} else {
+							callback();
+						}
+					});
+				} else {
+					me.load(function() {
+						callback();
+					})
+				}
 			}
 		},
 		load: function(callback) {
@@ -32,6 +47,8 @@ define([
 				callback();
 				// сохраняю в локальном хранилище
 				localStorage.setItem('dictionary', JSON.stringify(dictionary));
+				// запоминаю в сессии
+				session.set('dictionary_updated', true);
 			});
 		},
 		checkWord: function(word) {

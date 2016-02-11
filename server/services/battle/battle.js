@@ -8,6 +8,7 @@ var error = require(SERVICES_PATH + '/error');
 var _ = require('underscore');
 
 var dictionary = require(SERVICES_PATH + '/dictionary/dictionary');
+var rating = require(SERVICES_PATH + '/rating/rating');
 var battleFactory = require(SERVICES_PATH + '/battle/battle_factory')
 var messages = require(SERVICES_PATH + '/references/messages/messages');
 
@@ -48,7 +49,7 @@ Service.prototype.onWord = function(userModel, data, callback) {
 		battleId = userModel.get('bindings', 'battle'),
 		battle = me.battles[battleId],
 		side1, side2,
-		hit,
+		hit, result,
 		word = '',
 
 		innerCompactAndGetColumns = function(letters) {
@@ -145,6 +146,23 @@ Service.prototype.onWord = function(userModel, data, callback) {
 			}
 
 			return freeCells.length == 0;
+		},
+
+		innerFillLastHit = function(letters, word) {
+			var columns = innerCompactAndGetColumns(letters);
+
+			for(var i = 0; i < Math.min(word.length,6); i++) {
+				var id = columns[i][columns[i].length-1].id;
+				var tmp = letters[id];
+				var newId = battle.genLocalId('ltr');
+				letters[newId] = {
+					id: newId,
+					row: tmp.row,
+					column: tmp.column,
+					letter: word.charAt(i),
+				}
+				delete letters[id];
+			}
 		}
 
 	if (battle) {
@@ -177,24 +195,40 @@ Service.prototype.onWord = function(userModel, data, callback) {
 
 				// обновляю состояние получателя
 				if (side2.isFull) {
-					side2.isFinished = true;
+					innerFillLastHit(side2.letters, word);
+					side1.isWin = true;
 				} else {
 					side2.isFull = innerFillDest(side2.letters, word);
 				}
-side2.isFinished = true;
+
 				// рассылаю данные на клиент
 				hit = {
 					index: ++battle.hitIndex,
 					owner_id: userModel.id,
 					src: side1.letters,
 					dest: side2.letters,
-					finished: side2.isFinished,
 					quality: word.length < 5 ? 1 : (word.length < 6 ? 2 : 3),
+					finished: side1.isWin,
 				}
 
-				if (side2.isFinished) {
-					me.api.pushFinish(side1.u, {hit: hit});
-					me.api.pushFinish(side2.u, {hit: hit});
+				if (side1.isWin) {
+
+					// прибиваю объект боя
+					delete me.battles[battleId];
+
+					rating.finishBattle(battle, function(err, result) {
+						me.api.pushFinish(side1.u, {
+							hit: hit,
+							user: side1.u.asJson('info;stats;bindings;timed'),
+							result: result,
+						});
+						me.api.pushFinish(side2.u, {
+							hit: hit,
+							user: side2.u.asJson('info;stats;bindings;timed'),
+							result: result,
+						});
+					});
+
 				} else {
 					me.api.pushHit(side1.u, {hit: hit});
 					me.api.pushHit(side2.u, {hit: hit});

@@ -8,12 +8,14 @@ define([
 	'backbone',
 	'sockets/sockets',
 
+	'session/session',
 	'location/location',
 
 	'battle/battle_hits',
 	'battle/views/battle_container',
+	'battle/views/battle_result_window',
 
-], function($, _, Backbone, sockets, LocationService, BattleHits, BattleContainerView) {
+], function($, _, Backbone, sockets, session, LocationService, BattleHits, BattleContainerView, ResultWindowView) {
 
 	var channel = sockets.createChannel('battle');
 
@@ -50,9 +52,7 @@ define([
 			channel.push('word', {word});
 		});
 
-		BattleHits.init(battleContainerView, function() {
-			loadFinishAndShow();
-		});
+		BattleHits.init(battleContainerView);
 
 	}
 
@@ -66,8 +66,26 @@ define([
 		var me = this;
 
 		BattleHits.processHit(data.hit, function() {
+			// обновляю данные игрока
+			APP.user.set(data.user);
+
+			// останавливаю мониторинг ударов
 			BattleHits.stopMonitor();
+
+			// обновляю данные сессии
+			if (data.hit.owner_id == APP.user.attributes.id) {
+				session.set('win_counts', (session.get('win_counts') || 0) + 1);
+			} else {
+				session.set('lose_counts', (session.get('lose_counts') || 0) + 1);
+			}
+
+			// отрисовываю локацию
 			LocationService.render();
+
+			// показываю результат
+			new ResultWindowView({
+				data: data.result,
+			});
 		});
 	}
 

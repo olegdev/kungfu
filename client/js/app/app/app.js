@@ -4,9 +4,9 @@ define([
 	'app/models/user',
 	'battle/battle',
 	'location/location',
-	'battle/battle',
+	'dictionary/dictionary',
 	'sound/sound',
-], function(Logger, sockets, UserModel, battle, location, battle, sound) {
+], function(Logger, sockets, UserModel, battle, location, dictionary, sound) {
 
 	var logger = new Logger("app");
 
@@ -26,7 +26,9 @@ define([
 			var onlineListChannel = sockets.createChannel('onlinelist');
 			onlineListChannel.on('ready', function(data) {
 				if (APP.user.get('bindings').battle) {
-					battle.loadAndShow();
+					dictionary.checkUpdate(function() {
+						battle.loadAndShow();
+					});
 				} else {
 					location.render(APP.user);
 				}

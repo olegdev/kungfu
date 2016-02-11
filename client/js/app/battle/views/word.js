@@ -27,6 +27,10 @@ define([
 		// letters - хеш букв игрока
 		initialize: function(config) {
 			this.config = config;
+			
+			this.word = [];
+			this.valid = false;
+
 			this.render();
 		},
 

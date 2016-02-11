@@ -28,8 +28,7 @@ Service.prototype.checkQueue = function() {
 			}
 		}
 		if (i > 0) {
-			me.queue = me.queue.slice(i-2, me.queue.length-1);
-			console.log(me.queue);
+			me.queue = me.queue.slice(i, me.queue.length);
 		}
 	}
 }

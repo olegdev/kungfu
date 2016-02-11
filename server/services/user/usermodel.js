@@ -105,11 +105,6 @@ UserModel.prototype.get = function(addonName, key) {
 UserModel.prototype.set = function(addonName, key, value) {
 	var me = this;
 
-	if (!value) {
-		value = key;
-		key = undefined;
-	}
-
 	if (me.addons[addonName] && typeof me.addons[addonName].set == 'function') {
 		me.addons[addonName].set(key, value);
 	} else {

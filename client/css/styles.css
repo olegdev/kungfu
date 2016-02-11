@@ -264,11 +264,13 @@
 	background-color: #F9BD82 !important;
 	top: -120px;
 	transition: top 0.5s ease;
+	z-index: 2;
 }
 #battle .field .letter.dest-anim2 {
 	background-color: #F9BD82;
 	top: 350px;
 	transition: top 0.5s ease;
+	z-index: 2;
 }
 #battle .field .letter.finished {
 	transition: top 1.0s cubic-bezier(0.4, 0, 1, 1), left 1.0s ease;

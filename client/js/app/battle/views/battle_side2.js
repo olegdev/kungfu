@@ -222,9 +222,14 @@ define([
 
 			els.addClass('finished');
 			els.each(function() {
-				$(this).css({
+				var el = $(this),
+					left;
+				if (!el.hasClass('dest-anim') && !el.hasClass('dest-anim2') ) {
+					left = parseInt(el.css('left')) + _.random(-100, 100);
+				}
+				el.css({
 					top:  _.random(350, 500) +'px',
-					left: parseInt($(this).css('left')) + _.random(-100, 100),
+					left: left,
 					transform: 'rotate('+ _.random(0,30) +'deg)',
 				});
 			});

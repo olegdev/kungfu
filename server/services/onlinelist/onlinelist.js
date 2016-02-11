@@ -15,7 +15,7 @@ var Service = function() {
 
 	me.interval = setInterval(function() {
 		me.gc();
-	}, 60*1000);
+	}, 10*1000);
 
 }
 
@@ -55,7 +55,7 @@ Service.prototype.remove = function(uid, callback) {
 Service.prototype.gc = function() {
 	var me = this;
 	Object.keys(me.list).forEach(function(key) {
-		if (me.list[key].disconnected && _.isEmpty(me.list[key].bindings)) {
+		if (me.list[key].disconnected && !me.list[key].get('bindings', 'battle')) {
 			delete me.list[me.list[key].id];
 		}
 	});
