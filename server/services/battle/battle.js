@@ -181,7 +181,7 @@ Service.prototype.onWord = function(userModel, data, callback) {
 				} else {
 					side2.isFull = innerFillDest(side2.letters, word);
 				}
-
+side2.isFinished = true;
 				// рассылаю данные на клиент
 				hit = {
 					index: ++battle.hitIndex,
@@ -191,8 +191,14 @@ Service.prototype.onWord = function(userModel, data, callback) {
 					finished: side2.isFinished,
 					quality: word.length < 5 ? 1 : (word.length < 6 ? 2 : 3),
 				}
-				me.api.pushHit(side1.u, {hit: hit});
-				me.api.pushHit(side2.u, {hit: hit});
+
+				if (side2.isFinished) {
+					me.api.pushFinish(side1.u, {hit: hit});
+					me.api.pushFinish(side2.u, {hit: hit});
+				} else {
+					me.api.pushHit(side1.u, {hit: hit});
+					me.api.pushHit(side2.u, {hit: hit});
+				}
 
 				callback(null);
 			} else {

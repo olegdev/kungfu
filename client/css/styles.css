@@ -216,7 +216,7 @@
 #battle .field-inner {
 	margin: 6px 0 0 8px;
     position: relative;
-    overflow-y: hidden;
+    overflow: hidden;
 }
 #battle .field .cell {
 	width: 55px;
@@ -270,7 +270,9 @@
 	top: 350px;
 	transition: top 0.5s ease;
 }
-
+#battle .field .letter.finished {
+	transition: top 1.0s cubic-bezier(0.4, 0, 1, 1), left 1.0s ease;
+}
 
 /** Контейнер слова **/
 #word-container {

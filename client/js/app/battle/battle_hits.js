@@ -12,12 +12,20 @@ define([
 	var queue = [],
 		lastHitIndex,
 		interval,
-		battleViewContainer;
+		battleViewContainer,
+		onFinish;
 
 	var startMonitor = function() {
+		var hit;
 		interval = setInterval(function() {
-			if (queue.length && canShowHit(queue[0])) {
-				showHit(queue.shift());
+			if (canShowHit()) {
+				if (hit && hit.callback) {
+					hit.callback();
+				}
+				hit = undefined;
+				if (queue.length) {
+					hit = showHit(queue.shift());
+				}
 			}
 		}, 100);
 	}
@@ -26,12 +34,13 @@ define([
 		clearInterval(interval);
 	}
 	
-	var canShowHit = function(data) {
+	var canShowHit = function() {
 		return !battleViewContainer.isBusy;
 	}
 
 	var showHit = function(data) {
-		battleViewContainer.showHit(data);
+		battleViewContainer.showHit(data.data);
+		return data;
 	}
 
 	return {
@@ -39,22 +48,22 @@ define([
 			queue = [];
 			lastHitIndex = undefined;
 			battleViewContainer = battleViewContainerInstance;
-			battleViewContainer.on('destroy', function() {
-				stopMonitor();
-			});
 			startMonitor();
 		},
-		processHit: function(data) {
+		processHit: function(data, callback) {
 			if (!lastHitIndex || lastHitIndex +1 == data.hitIndex) {
 				lastHitIndex = data.hitIndex;
-				queue.push(data);	
+				queue.push({data: data, callback: callback});	
 			} else if (lastHitIndex < data.hitIndex) {
 				setTimeout(function() {
-					this.processHit(data);
+					this.processHit(data, callback);
 				}, 1000);
 			} else {
 				// ignore
 			}
+		},
+		stopMonitor: function() {
+			stopMonitor();
 		}
 	};
 });

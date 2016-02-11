@@ -61,6 +61,10 @@ API.prototype.pushHit = function(userModel, data) {
 	this.channel.push(userModel.id, 'hit', data);
 }
 
+API.prototype.pushFinish = function(userModel, data) {
+	this.channel.push(userModel.id, 'finish', data);
+}
+
 // Создает только один экземпляр класса
 API.getInstance = function(){
     if (!this.instance) {

@@ -8,10 +8,12 @@ define([
 	'backbone',
 	'sockets/sockets',
 
+	'location/location',
+
 	'battle/battle_hits',
 	'battle/views/battle_container',
 
-], function($, _, Backbone, sockets, BattleHits, BattleContainerView) {
+], function($, _, Backbone, sockets, LocationService, BattleHits, BattleContainerView) {
 
 	var channel = sockets.createChannel('battle');
 
@@ -21,6 +23,9 @@ define([
 	});
 	channel.on('hit', function(data) {
 		processHit(data);
+	});
+	channel.on('finish', function(data) {
+		showFinish(data);
 	});
 
 	/*** Старт боя */
@@ -45,13 +50,25 @@ define([
 			channel.push('word', {word});
 		});
 
-		BattleHits.init(battleContainerView);
-		
+		BattleHits.init(battleContainerView, function() {
+			loadFinishAndShow();
+		});
+
 	}
 
 	/*** Пришел удар */
 	var processHit = function(data) {
 		BattleHits.processHit(data.hit);
+	}
+
+	/*** Показываю последний удар и окно результата */
+	var showFinish = function(data) {
+		var me = this;
+
+		BattleHits.processHit(data.hit, function() {
+			BattleHits.stopMonitor();
+			LocationService.render();
+		});
 	}
 
 	return {

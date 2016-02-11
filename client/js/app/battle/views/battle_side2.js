@@ -215,6 +215,26 @@ define([
 
 		},
 
+		animFinish: function(callback) {
+			var me = this;
+
+			var els = me.$el.find('.letter');
+
+			els.addClass('finished');
+			els.each(function() {
+				$(this).css({
+					top:  _.random(350, 500) +'px',
+					left: parseInt($(this).css('left')) + _.random(-100, 100),
+					transform: 'rotate('+ _.random(0,30) +'deg)',
+				});
+			});
+
+			setTimeout(function() {
+				callback();
+			}, 1000);
+			
+		},
+
 	});
 
 	return View;

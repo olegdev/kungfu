@@ -75,8 +75,14 @@ define([
 				// показываю анимацию приёмника
 				field2.showDestHit(data, function() {
 					setTimeout(function() {
-						// звук удара 
-						if (data.quality == 1) {
+
+						if (data.finished) {
+							sound.play('hit_finished');
+							field2.animFinish(function() {
+								me.isBusy = false;	
+							});
+						} else if (data.quality == 1) {
+							// звук удара 
 							sound.play('hit_1');
 							me.isBusy = false;
 						} else if (data.quality == 2) {
@@ -106,7 +112,7 @@ define([
 								me.isBusy = false;
 							}, 2000);
 						}
-					}, 300);
+					}, 200);
 				});
 			});
 		},
