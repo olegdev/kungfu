@@ -3,12 +3,13 @@ define([
 	'jquery',
 	'underscore',
 	'backbone',
+	'sound/sound',
 	'battle/views/battle_side1',
 	'battle/views/battle_side2',
 	'location/views/opponents',
 	'text!battle/templates/battle_container.tpl',
 	'references/messages',
-], function($, _, Backbone, BattleSide1View, BattleSide2View, OpponentsView, tpl, messages) {
+], function($, _, Backbone, sound, BattleSide1View, BattleSide2View, OpponentsView, tpl, messages) {
 
 	var View = Backbone.View.extend({
 
@@ -46,6 +47,8 @@ define([
 			$('#battle-side1').append(this.side1Field.render().$el);
 			$('#battle-side2').append(this.side2Field.render().$el);
 
+			// sound.play('song1');
+
 		},
 
 		/**
@@ -68,9 +71,42 @@ define([
 
 			// показываю анимацию источника
 			field1.showSourceHit(data, function() {
+
 				// показываю анимацию приёмника
 				field2.showDestHit(data, function() {
-					me.isBusy = false;
+					setTimeout(function() {
+						// звук удара 
+						if (data.quality == 1) {
+							sound.play('hit_1');
+							me.isBusy = false;
+						} else if (data.quality == 2) {
+							sound.play('hit_' + data.quality);
+							field2.startBlurLetters();
+							setTimeout(function() {
+								field2.stopBlurLetters(function() {
+									//
+								});
+								me.isBusy = false;
+							}, 1000);
+						} else {
+							sound.play('hit_1');
+							// звук качественного удара
+							setTimeout(function() {
+								sound.play('hit_' + data.quality);
+							}, 200);
+
+							field2.startBlurLetters();
+							field2.smashLetters();
+							
+							setTimeout(function() {
+								field2.stopBlurLetters(function() {
+									//
+								});
+								field2.unsmashLetters();
+								me.isBusy = false;
+							}, 2000);
+						}
+					}, 300);
 				});
 			});
 		},

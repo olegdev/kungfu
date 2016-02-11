@@ -12,6 +12,7 @@ define([
 
 	var View = BackboneSide2View.extend({
 
+		defaultAngleOfLettersRotation: 0,
 		template: _.template(tpl),
 
 		events: {
@@ -141,6 +142,16 @@ define([
 			callback();
 		},
 
+		unsmashLetters: function() {
+			var me = this;
+			_.each(me.config.letters, function(value) {
+				me.$el.find('.letter[data-id="'+ value.id +'"]').css({
+					top: ((me.config.fieldSize.rows-1-value.row) * me.cellHeight),
+					left: value.column * me.cellWidth,
+					transform: 'rotate('+ me.defaultAngleOfLettersRotation +'deg)',
+				});
+			});
+		},
 
 	});
 

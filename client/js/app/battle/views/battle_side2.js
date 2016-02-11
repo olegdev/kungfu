@@ -12,6 +12,7 @@ define([
 		className: 'field',
 		cellWidth: 55 + 7,
 		cellHeight: 55+ 6,
+		defaultAngleOfLettersRotation: 180,
 
 		template: _.template(tpl),
 
@@ -132,6 +133,86 @@ define([
 			me.config.letters = data.dest;
 
 			callback();
+		},
+
+		/*** Размывание букв на поле */
+		startBlurLetters: function() {
+			var me = this;
+
+			if (me.bluringInterval) {
+				return;
+			}
+
+			var els = me.$el.find('.letter'),
+				blurValue = 9,
+				blurDir = 1,
+				originalColor = els.css('color');
+
+			els.css({
+				'color': 'transparent',
+				'text-shadow': '0 0 9px rgba(68,68,68,0.5)'
+			});
+
+			me.bluringInterval = setInterval(function() {
+				if (me.stopBluringCallback) {
+					if (blurValue-- == 0) {
+						clearInterval(me.bluringInterval);
+						me.bluringInterval = null;
+						els.css({
+							'color': originalColor,
+							'text-shadow': 'none'
+						});
+						me.stopBluringCallback();
+						me.stopBluringCallback = null;
+						return;
+					}
+				} else {
+					if (blurDir == 1) {
+						blurValue++;
+					} else {
+						blurValue--;
+					}
+					if (blurValue == 15) {
+						blurDir = 0;
+					} else if (blurValue == 7) {
+						blurDir = 1;
+					}
+				}
+				els.css('text-shadow', '0 0 '+ blurValue +'px rgba(68,68,68,0.5)');
+			}, 125);
+		},
+
+		/*** Пректарить размывание */
+		stopBlurLetters: function(callback) {
+			var me = this;
+			me.stopBluringCallback = callback;
+		},
+
+		/*** Тармошим буквы */
+		smashLetters: function() {
+			var me = this;
+
+			var els = me.$el.find('.letter');
+
+			els.each(function() {
+				$(this).css({
+					top:  _.random(0,244) +'px',
+					left: _.random(10, 240),
+					transform: 'rotate('+ _.random(0,30) +'deg)',
+				});
+			});
+		},
+
+		unsmashLetters: function() {
+			var me = this;
+			_.each(me.config.letters, function(value) {
+				me.$el.find('.letter[data-id="'+ value.id +'"]').css({
+					top: value.row * me.cellHeight,
+					left: value.column * me.cellWidth,
+					transform: 'rotate('+ me.defaultAngleOfLettersRotation +'deg)',
+				});
+			});
+
 		},
 
 	});

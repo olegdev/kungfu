@@ -189,6 +189,7 @@ Service.prototype.onWord = function(userModel, data, callback) {
 					src: side1.letters,
 					dest: side2.letters,
 					finished: side2.isFinished,
+					quality: word.length < 5 ? 1 : (word.length < 6 ? 2 : 3),
 				}
 				me.api.pushHit(side1.u, {hit: hit});
 				me.api.pushHit(side2.u, {hit: hit});

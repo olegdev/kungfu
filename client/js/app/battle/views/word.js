@@ -5,10 +5,11 @@ define([
 	'backbone',
 
 	'dictionary/dictionary',
+	'sound/sound',
 
 	'text!battle/templates/word.tpl',
 	'references/messages',
-], function($, _, Backbone, dictionary, tpl, messages) {
+], function($, _, Backbone, dictionary, sound, tpl, messages) {
 
 	var View = Backbone.View.extend({
 
@@ -39,6 +40,14 @@ define([
 		addLetter: function(id) {
 			this.word.push(this.config.letters[id]);
 			this.onChange();
+			sound.play('click');
+			// if (this.word.length < 3) {
+			// 	sound.play('click2');
+			// } else if (this.word.length < 5) {
+			// 	sound.play('click3');
+			// } else {
+			// 	sound.play('click4');
+			// }
 		},
 
 		removeLetter: function(id) {

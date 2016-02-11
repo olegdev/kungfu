@@ -5,7 +5,8 @@ define([
 	'battle/battle',
 	'location/location',
 	'battle/battle',
-], function(Logger, sockets, UserModel, battle, location, battle) {
+	'sound/sound',
+], function(Logger, sockets, UserModel, battle, location, battle, sound) {
 
 	var logger = new Logger("app");
 

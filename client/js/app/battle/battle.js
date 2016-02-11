@@ -46,6 +46,7 @@ define([
 		});
 
 		BattleHits.init(battleContainerView);
+		
 	}
 
 	/*** Пришел удар */
