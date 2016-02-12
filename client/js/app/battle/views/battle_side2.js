@@ -195,9 +195,28 @@ define([
 			var els = me.$el.find('.letter');
 
 			els.each(function() {
+				var el = $(this),
+					top = parseInt(el.css('top')),
+					left = parseInt(el.css('left'));
+
+				top += _.random(-30, 30);
+				left += _.random(-30, 30);
+
+				if (top < 0) {
+					top = 0;
+				} else if (top > 244) {
+					top = 244;
+				}
+
+				if (left < 10) {
+					left = 10;
+				} else if (left > 240) {
+					left = 240;
+				}
+
 				$(this).css({
-					top:  _.random(0,244) +'px',
-					left: _.random(10, 240),
+					top:  top,
+					left: left,
 					transform: 'rotate('+ _.random(0,30) +'deg)',
 				});
 			});

@@ -110,7 +110,7 @@ define([
 								});
 								field2.unsmashLetters();
 								me.isBusy = false;
-							}, 2000);
+							}, 1500);
 						}
 					}, 200);
 				});
