@@ -200,7 +200,7 @@ Service.prototype.onWord = function(userModel, data, callback) {
 				} else {
 					side2.isFull = innerFillDest(side2.letters, word);
 				}
-
+// side1.isWin = true;
 				// рассылаю данные на клиент
 				hit = {
 					index: ++battle.hitIndex,

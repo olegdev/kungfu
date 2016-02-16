@@ -3,11 +3,14 @@ define([
 	'jquery',
 	'underscore',
 	'backbone',
+
+	'sound/sound',
+
 	'location/views/window',
 	'location/views/opponents',
 	'text!battle/templates/battle_result_window.tpl',
 	'references/messages',
-], function($, _, Backbone, windowView, opponentsView, tpl, messages) {
+], function($, _, Backbone, sound, windowView, opponentsView, tpl, messages) {
 
 	var View = windowView.extend({
 
@@ -37,6 +40,8 @@ define([
 
 			config.content = _.template(tpl)({user: side1.u, enemy: side2.u, messages: messages, opponentsView: opponentsView});
 			windowView.prototype.initialize.apply(this, arguments);
+
+			// sound.play('win');
 		},
 
 	});

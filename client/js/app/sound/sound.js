@@ -16,7 +16,7 @@ define([
 
 	$(function() {
 		sounds.data.forEach(function(sound) {
-			soundEls[sound.key] = $('<audio src="'+ sound.value +'"></audio>')[0];
+			soundEls[sound.key] = $('<audio ' + (sound.loop ? "loop" : '') + ' src="'+ sound.value +'"></audio>')[0];
 			$(document.body).append(soundEls[sound.key]);
 		});
 	});
