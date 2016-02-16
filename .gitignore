@@ -5,3 +5,4 @@ vendor
 /server/services/dictionary/ru
 /*.sublime-project
 /*.sublime-workspace
+server.config
