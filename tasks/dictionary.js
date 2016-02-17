@@ -15,7 +15,7 @@ module.exports = function(grunt) {
 	    var options = this.options();
 		var data = fs.readFileSync(options.dataFileName, 'utf8');
 		var done = this.async();
-		dictionary.setData(1, data.split('\r\n'), function(err) {
+		dictionary.setData(1, data.split(/\s+/), function(err) {
 			if (err) {
 				grunt.log.error('Error:', err);
 				done(false);
