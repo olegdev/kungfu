@@ -1,5 +1,6 @@
 GLOBAL.BASE_PATH = __dirname;
 GLOBAL.SERVICES_PATH = __dirname + '/server/services';
+GLOBAL.CONFIG = JSON.parse(fs.readFileSync(BASE_PATH + '/server.config'));
 
 module.exports = function(grunt) {
 

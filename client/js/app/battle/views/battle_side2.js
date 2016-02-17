@@ -249,7 +249,7 @@ define([
 				el.css({
 					top:  _.random(350, 500) +'px',
 					left: left,
-					transform: 'rotate('+ _.random(0,30) +'deg)',
+					transform: me.defaultAngleOfLettersRotation +  'rotate('+ _.random(-30,30) +'deg)',
 				});
 			});
 
