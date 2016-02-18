@@ -57,7 +57,10 @@ define([
 		},
 
 		onWordSubmit: function(word) {
-			this.$el.find('.selected').removeClass('selected').addClass('submit');
+			this.$el.find('.selected').removeClass('selected').each(function() {
+				$(this).addClass('src-anim');
+			});
+
 			this.trigger('submit', word);
 		},
 
@@ -65,14 +68,7 @@ define([
 		showSourceHit: function(data, callback) {
 			var me = this;
 
-			// нахожу буквы удара и смещаю их вверх
-			_.each(me.config.letters, function(value) {
-				if (!data.src[value.id]) {
-					me.$el.find('.submit[data-id="'+ value.id +'"]').addClass('src-anim');
-				}
-			});
-
-			// смещаю остальные буквы на своем поле
+			// смещаю буквы на своем поле
 			_.each(me.config.letters, function(value) {
 				if (data.src[value.id] && data.src[value.id].row != value.row) {
 					me.$el.find('.letter[data-id="'+ value.id +'"]').css('top', ((me.config.fieldSize.rows-1-data.src[value.id].row) * me.cellHeight) + 'px');
