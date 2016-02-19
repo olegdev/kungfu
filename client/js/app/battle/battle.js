@@ -49,7 +49,7 @@ define([
 		});
 
 		battleContainerView.on('submit', function(word) {
-			channel.push('word', {word});
+			channel.push('word', {word: word});
 		});
 
 		BattleHits.init(battleContainerView);
