@@ -3,6 +3,7 @@
  */
 var q = require('q');
 var fs = require("fs");
+var _ = require("underscore");
 
 module.exports = {
 
@@ -27,11 +28,12 @@ module.exports = {
 	},
 
 	getModuleConfig: function(filename) {
+		var defaults = JSON.parse(fs.readFileSync(filename.substr(0, filename.length-3) + '.config')),
+			specified = {};
 		if (typeof CONFIG != 'undefined' && fs.existsSync(filename.substr(0, filename.length-3) + '_' + CONFIG.server_name + '.config')) {
-			return JSON.parse(fs.readFileSync(filename.substr(0, filename.length-3) + '_' + CONFIG.server_name + '.config'));	
-		} else {
-			return JSON.parse(fs.readFileSync(filename.substr(0, filename.length-3) + '.config'));	
+			specified = JSON.parse(fs.readFileSync(filename.substr(0, filename.length-3) + '_' + CONFIG.server_name + '.config'));	
 		}
+		return _.extend(defaults, specified);
 	}
 
 };

@@ -17,7 +17,7 @@ define([
 				user: new UserModel(config.user),
 			};
 
-			if (APP.config.enableInfoLog) {
+			if (APP.config.debug) {
 				Logger.enableInfoLog();
 			}
 

@@ -82,6 +82,9 @@ app.get("/", function(req, res, next) {
 			.getConfig(req.session.uid, function(err, config) {
 				if (!err && config) {
 					app.locals.config = JSON.stringify(config);
+					if (config.debug) {
+						app.locals.debug = JSON.stringify(config.debug);						
+					}
 					res.render('main', {layout: 'main'});
 				} else {
 					res.status(500).send("Internal server error");

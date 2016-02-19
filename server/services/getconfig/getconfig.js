@@ -21,7 +21,9 @@ var Service = {
 				}
 			});
 		}
-		var clientConfig = config.clientConfig || {};
+		var clientConfig = {
+			debug: CONFIG.debug,
+		};
 
 		if (onlineList.list[uid]) {
 			innerFillConfig(onlineList.list[uid]);

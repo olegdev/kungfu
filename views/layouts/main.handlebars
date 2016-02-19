@@ -4,15 +4,19 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, user-scalable=no" />
-  <meta name="description" content="IBoxing">
+  <meta name="description" content="Словесное Кунг-Фу">
   <meta name="author" content="olegdev">
 
   <link rel="stylesheet" type="text/css" href="css/reset.css" />
   <link rel="stylesheet" type="text/css" href="css/styles.css" />
 
-  <title>IBoxing</title>
+  <title>Словесное Кунг-Фу</title>
 
-  <script type="text/javascript" src="js/vendor/requirejs/require.js" data-main="js/main"></script>	
+  {{#if debug}}
+  <script type="text/javascript" src="js/vendor/requirejs/require.js" data-main="js/main"></script> 
+  {{else}}
+  <script type="text/javascript" src="js/vendor/requirejs/require.js" data-main="js/main-build.js"></script> 
+  {{/if}}
 
   <script type="text/javascript">
     var config = {{{config}}};
