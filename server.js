@@ -4,6 +4,7 @@ GLOBAL.API_PATH = __dirname + '/server/api';
 GLOBAL.CONFIG = require(BASE_PATH + '/server/util').getModuleConfig(__filename);
 
 var express = require('express');
+var compression = require('compression');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
@@ -60,8 +61,8 @@ app.use(sessionMiddleware);
 
 //============= Static ============
 
+app.use(compression());
 app.use(express.static(__dirname + '/client'));
-
 
 //============= Template engine ============
 
