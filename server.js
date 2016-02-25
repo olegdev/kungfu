@@ -144,6 +144,7 @@ fs.readdirSync(join(BASE_PATH, 'server/api')).forEach(function (file) {
 dictionary.load(function(err) {
 	if (!err) {
 		/****/ logger.info('Dictionary loaded with ' + dictionary.dictionary.words.length + ' words');
+		
 	} else {
 		/****/ logger.error('Dictionary load error');
 	}

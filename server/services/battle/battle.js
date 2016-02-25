@@ -91,14 +91,14 @@ Service.prototype.onWord = function(userModel, data, callback) {
 						id: id,
 						row: 0,
 						column: i,
-						letter: dictionary.getRandomLetter(),
+						letter: dictionary.generateLetter(letters, 0),
 					};
 					id = battle.genLocalId('ltr');
 					letters[id] = {
 						id: id,
 						row: 1,
 						column: i,
-						letter: dictionary.getRandomLetter(),
+						letter: dictionary.generateLetter(letters, 1),
 					};
 				} else if (columns[i].length == 1) {
 					id = battle.genLocalId('ltr');
@@ -106,7 +106,7 @@ Service.prototype.onWord = function(userModel, data, callback) {
 						id: id,
 						row: 1,
 						column: i,
-						letter: dictionary.getRandomLetter(),
+						letter: dictionary.generateLetter(letters, 1),
 					};
 				}
 			}
