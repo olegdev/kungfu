@@ -57,11 +57,11 @@ Service.prototype.factory = function(userModel, userModel2) {
 					id: this.id,
 					fieldSize: this.fieldSize,
 					sides: [{
-						u: this.sides[0].u.asJson('info;stats;'),
+						u: this.sides[0].u.asJson('info;counters;'),
 						letters: this.sides[0].letters,
 						isWin: this.sides[0].isWin,
 					},{
-						u: this.sides[1].u.asJson('info;stats;'),
+						u: this.sides[1].u.asJson('info;counters;'),
 						letters: this.sides[1].letters,
 						isWin: this.sides[1].isWin,
 					}]

@@ -7,6 +7,8 @@ var logger = require(SERVICES_PATH + '/logger/logger')(__filename);
 var error = require(SERVICES_PATH + '/error');
 var _ = require('underscore');
 
+var leagueRef = require(SERVICES_PATH + '/references/leagues/leagues');
+
 // var battleService = require(SERVICES_PATH + '/battle/battle');
 
 var Service = function() {
@@ -16,28 +18,44 @@ var Service = function() {
 
 Service.prototype.finishBattle = function(battle, callback) {
 	var me = this,
-		stats,
 		result = {
 			battle: battle.asJson()
-		};
+		},
+		winUser, loseUser,
+		points;
 
 	// прибиваю ссылки на бой
 	battle.sides[0].u.set('bindings', 'battle', null);
 	battle.sides[1].u.set('bindings', 'battle', null);
 
-	// обновляю статы участников
 	if (battle.sides[0].isWin) {
-		battle.sides[0].u.set('stats', 'wins', battle.sides[0].u.get('stats', 'wins') + 1);
-		battle.sides[1].u.set('stats', 'loses', battle.sides[1].u.get('stats', 'loses') + 1);
+		winUser = battle.sides[0].u;
+		loseUser = battle.sides[1].u;
 	} else {
-		battle.sides[1].u.set('stats', 'wins', battle.sides[1].u.get('stats', 'wins') + 1);
-		battle.sides[0].u.set('stats', 'loses', battle.sides[0].u.get('stats', 'loses') + 1);
+		winUser = battle.sides[1].u;
+		loseUser = battle.sides[0].u;
+	}
+
+	// обновляю счетчики
+	winUser.addons.counters.incValue('wins');
+	loseUser.addons.counters.incValue('loses');
+
+	// рейтинг
+	points = me.calcPoints(winUser, loseUser);
+	winUser.addons.rating.addPoints(points);
+	loseUser.addons.rating.addPoints(-points);
+
+	result.points = points;
+
+	// лига
+	if (me.maybeNewLeague(winUser)) {
+		result.league = winUser.get('rating', 'league');
 	}
 
 	// сохраняю изменения
-	battle.sides[0].u.model.save(function(err) {
+	winUser.model.save(function(err) {
 		if (!err) {
-			battle.sides[1].u.model.save(function(err) {
+			loseUser.model.save(function(err) {
 				if (!err) {
 					callback(null, result);
 				} else {
@@ -49,6 +67,29 @@ Service.prototype.finishBattle = function(battle, callback) {
 		}
 	});
 
+}
+
+Service.prototype.calcPoints = function(u1, u2) {
+	var me = this,
+		leagueIndex = u1.get('rating', 'league'),
+		leagueInfo = leagueRef.getLeagueByIndex(leagueIndex),
+		u1Points = u1.get('rating', 'points'),
+		u2Points = u2.get('rating', 'points');
+
+	return parseInt(leagueInfo.delta / leagueInfo.fight_count + (u2Points - u1Points) / leagueInfo.fight_count);
+}
+
+Service.prototype.maybeNewLeague = function(u) {
+	var me = this,
+		leagueIndex = u.get('rating', 'league'),
+		leagueMaxPoints = leagueRef.getLeagueByIndex(leagueIndex).points,
+		nextLeague = leagueRef.getNextLeague(leagueIndex),
+		currentPoints = u.get('rating', 'points');
+
+	if (nextLeague && currentPoints > leagueMaxPoints) {
+		u.set('rating', 'league', nextLeague.index);
+		return true;
+	}
 }
 
 // Создает только один экземпляр класса

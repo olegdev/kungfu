@@ -1,10 +1,10 @@
 /**
- * Статы (key-value хеш)
+ * Рейтинг игрока (лига, кол-во очков)
  */
 var logger = require(SERVICES_PATH + '/logger/logger')(__filename);
 var error = require(SERVICES_PATH + '/error');
 var mongoose = require("mongoose");
-var _ = require('underscore');
+var _ = require("underscore");
 
 var Service = {
 	factory: function(model) {
@@ -20,20 +20,25 @@ var Addon = function(model) {
 }
 
 Addon.prototype.getConfig = function() {
-	return this.model.get('stats');
+	return this.get();
 }
 
 Addon.prototype.get = function(key) {
 	var me = this,
-		data = me.model.get('stats');
+		data = me.model.get('rating');
 	return key ? data[key] : data;
 }
 
 Addon.prototype.set = function(key, value) {
 	var me = this,
-		data = me.model.get('stats');
+		data = me.model.get('rating');
 	data[key] = value;	
-	me.model.set('stats', _.clone(data));
+	me.model.set('rating', _.clone(data));
+}
+
+Addon.prototype.addPoints = function(points) {
+	var me = this;
+	me.set('points', Math.max(me.get('points') + points,0));
 }
 
 module.exports = Service;

@@ -14,7 +14,7 @@ var API = function() {
 
 API.prototype.cmdGetUser = function(userModel, params, callback) {
 	var me = this;
-	callback(userModel.asJson('info;stats;bindings;timed'));
+	callback(userModel.asJson('info;counters;bindings;timed'));
 }
 
 // Создает только один экземпляр класса

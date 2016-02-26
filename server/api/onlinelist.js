@@ -18,7 +18,7 @@ API.prototype.cmdGetOnlineList = function(userModel, params, callback) {
 		list = [];
 
 	Object.keys(onlinelistService.list).forEach(function(uid) {
-		list.push(onlinelistService.list[uid].asJson('info;stats;'));
+		list.push(onlinelistService.list[uid].asJson('info;counters;'));
 	});
 
 	callback(list);

@@ -219,12 +219,12 @@ Service.prototype.onWord = function(userModel, data, callback) {
 					rating.finishBattle(battle, function(err, result) {
 						me.api.pushFinish(side1.u, {
 							hit: hit,
-							user: side1.u.asJson('info;stats;bindings;timed'),
+							user: side1.u.asJson('info;counters;bindings;timed;rating'),
 							result: result,
 						});
 						me.api.pushFinish(side2.u, {
 							hit: hit,
-							user: side2.u.asJson('info;stats;bindings;timed'),
+							user: side2.u.asJson('info;counters;bindings;timed;rating'),
 							result: result,
 						});
 					});

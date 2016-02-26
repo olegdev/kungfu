@@ -6,9 +6,10 @@ define([
 
 		id: '',
 		info: {},
-		stats: {},
+		counters: {},
 		timed: '',
 		bindings: {},
+		rating: {},
 
 		initialize: function() {
 			//

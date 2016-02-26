@@ -12,13 +12,16 @@ var schema = new mongoose.Schema({
 		title: String,
 		img: String,
 	},
-	stats: {
-		rating: Number,
+	counters: {
 		wins: Number,
 		loses: Number,
 	},
 	timed: {
 		energy: Array
+	},
+	rating: {
+		league: Number,
+		points: Number
 	},
 });
 var model = mongoose.model('users', schema);

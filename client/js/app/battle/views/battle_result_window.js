@@ -10,7 +10,8 @@ define([
 	'location/views/opponents',
 	'text!battle/templates/battle_result_window.tpl',
 	'references/messages',
-], function($, _, Backbone, sound, windowView, opponentsView, tpl, messages) {
+	'references/leagues',
+], function($, _, Backbone, sound, windowView, opponentsView, tpl, messages, leagues) {
 
 	var View = windowView.extend({
 
@@ -38,7 +39,7 @@ define([
 				this.title = messages.getByKey('window_title_battle_resul_lose');
 			}
 
-			config.content = _.template(tpl)({user: side1.u, enemy: side2.u, messages: messages, opponentsView: opponentsView});
+			config.content = _.template(tpl)({result: config.data, isWin: side1.isWin, user: side1.u, enemy: side2.u, messages: messages, leagues: leagues, opponentsView: opponentsView});
 			windowView.prototype.initialize.apply(this, arguments);
 
 			// sound.play('win');

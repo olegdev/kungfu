@@ -75,8 +75,10 @@ define([
 			// обновляю данные сессии
 			if (data.hit.owner_id == APP.user.attributes.id) {
 				session.set('win_counts', (session.get('win_counts') || 0) + 1);
+				session.set('rating', (session.get('rating') || 0) + data.result.points);
 			} else {
 				session.set('lose_counts', (session.get('lose_counts') || 0) + 1);
+				session.set('rating', (session.get('rating') || 0) - data.result.points);
 			}
 
 			// отрисовываю локацию
