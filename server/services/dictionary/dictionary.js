@@ -5,7 +5,6 @@
 var config = require(BASE_PATH + '/server/util').getModuleConfig(__filename);
 var logger = require(SERVICES_PATH + '/logger/logger')(__filename);
 var error = require(SERVICES_PATH + '/error');
-var user = require(SERVICES_PATH + '/user/user');
 var mongoose = require('mongoose');
 var _ = require('underscore');
 
@@ -132,11 +131,9 @@ Service.prototype.getRandomLetter = function() {
 	return word[randomIndex];
 }
 
-Service.prototype.generateLetter = function(letters, rowIndex) {
+Service.prototype.generateLetter = function(letters) {
 	var me = this,
 		letter,
-		rowLetters,
-		setOfRowLetters = {},
 		setOfLetters = {},
 		count = 0,
 		glCount = 0,
@@ -145,11 +142,6 @@ Service.prototype.generateLetter = function(letters, rowIndex) {
 		group, groups;
 
 	_.each(letters, function(item) {
-		if (item.row == rowIndex) {
-			//rowLetters.push(item.letter);
-			setOfRowLetters[item.letter] = 1;
-		}
-
 		if (setOfLetters[item.letter]) {
 			setOfLetters[item.letter] += 1;
 		} else {
@@ -187,8 +179,8 @@ Service.prototype.generateLetter = function(letters, rowIndex) {
 	do {
 		letter = group[randomIndex];
 
-		// в ряду не может быть повторов, не может быть повторов сложных букв, обычные буквы повторяются до 2х раз
-		if (setOfRowLetters[letter] || (config.letters[letter].hard && setOfLetters[letter] > 0) || (!config.letters[letter].hard && setOfLetters[letter] > 1)) { 
+		// не может быть повторов сложных букв, обычные буквы повторяются до 2х раз, не может быть повторов, если букв меньше 10
+		if ((setOfLetters[letter] > 0 && (count <= 10 || config.letters[letter].hard)) || setOfLetters[letter] > 1) { 
 			letter = null;
 			randomIndex = randomIndex < group.length-1 ? randomIndex + 1 : 0;
 		}
@@ -197,59 +189,6 @@ Service.prototype.generateLetter = function(letters, rowIndex) {
 
 	return letter;
 }
-
-// Service.prototype.generateRowLetter = function(rowOfLetters) {
-// 	var me = this,
-// 		letter,
-// 		glCount = 0,
-// 		hardCount = 0,
-// 		randomIndex,
-// 		group, groups;
-
-// 	// определяю кол-во гласных и сложных букв в ряду
-// 	for(var i = 0; i < rowOfLetters.length; i++) {
-// 		if (config.letters[rowOfLetters[i]].gl) {
-// 			glCount++;
-// 		}
-// 		if (config.letters[rowOfLetters[i]].hard) {
-// 			hardCount++;
-// 		}
-// 	}
-
-// 	// определяю возможные группы для буквы
-// 	if (glCount >= 2) {
-// 		if (hardCount >= 1) {
-// 			groups = [me.letters.sgl];
-// 		} else {
-// 			groups = [me.letters.sgl, me.letters.hardSgl];
-// 		}
-// 	} else if (glCount < 2 && rowOfLetters.length >= 3) {
-// 		if (hardCount >= 1) {
-// 			groups = [me.letters.gl];
-// 		} else {
-// 			groups = [me.letters.gl, me.letters.hardGl];
-// 		}
-// 	} else {
-// 		if (hardCount >= 1) {
-// 			groups = [me.letters.gl, me.letters.sgl];
-// 		} else {
-// 			groups = [me.letters.gl, me.letters.sgl, me.letters.hardGl, me.letters.hardSgl];
-// 		}
-// 	}
-
-// 	group = groups[_.random(0, groups.length-1)];
-// 	randomIndex = _.random(0, group.length-1);
-// 	do {
-// 		letter = group[randomIndex];
-// 		if (rowOfLetters.indexOf(letter) != -1) { // в ряду не может быть повторов
-// 			letter = null;
-// 			randomIndex = randomIndex < group.length-1 ? randomIndex + 1 : 0;
-// 		}
-
-// 	} while(!letter);
-
-// 	return letter;
-// }
 
 // перемешивает буквы в слове
 Service.prototype.mixWord = function(word) {

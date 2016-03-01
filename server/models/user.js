@@ -23,6 +23,7 @@ var schema = new mongoose.Schema({
 		league: Number,
 		points: Number
 	},
+	botId: Number,
 });
 var model = mongoose.model('users', schema);
 

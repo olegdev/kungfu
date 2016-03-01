@@ -7,6 +7,7 @@ var logger = require(SERVICES_PATH + '/logger/logger')(__filename);
 var error = require(SERVICES_PATH + '/error');
 var _ = require('underscore');
 
+var botsService = require(SERVICES_PATH + '/bots/bots');
 var battleService = require(SERVICES_PATH + '/battle/battle');
 
 var Service = function() {
@@ -22,15 +23,20 @@ Service.prototype.checkQueue = function() {
 	if (me.queue.length > 1) {
 		for(var i = 0; i < me.queue.length; i+=2) {
 			if (me.queue[i] && me.queue[i+1]) {
-				me.api.pushEnemy(me.queue[i], me.queue[i+1]);
-				me.api.pushEnemy(me.queue[i+1], me.queue[i]);
-				battleService.createBattle(me.queue[i], me.queue[i+1]);
+				me.goBattle(me.queue[i], me.queue[i+1]);
 			}
 		}
 		if (i > 0) {
 			me.queue = me.queue.slice(i, me.queue.length);
 		}
 	}
+}
+
+Service.prototype.goBattle = function(u1,u2) {
+	var me = this;
+	me.api.pushEnemy(u1, u2);
+	me.api.pushEnemy(u2, u1);
+	battleService.createBattle(u1, u2);
 }
 
 Service.prototype.search = function(userModel) {
@@ -44,7 +50,32 @@ Service.prototype.search = function(userModel) {
 	}
 	if (!alreadyQueued) {
 		this.queue.push(userModel);
+		if (this.queue.length == 1) {
+			me.startBotIjectMonitor();
+		} else {
+			me.stopBotInjectMonitor();
+		}
 	}
+}
+
+Service.prototype.startBotIjectMonitor = function() {
+	var me = this,
+		u1;
+	me.botInjectTimeout = setTimeout(function() {
+		u1 = me.queue.shift();
+		u2 = botsService.findBotForUser(u1);
+		if (u2) {
+			me.goBattle(u1, u2);
+		} else {
+			// не подобрался .. возможно все в бою, стартую новый монитор
+			me.startBotIjectMonitor();
+		}
+	}, _.random(2,5) * 1000);
+}
+
+Service.prototype.stopBotInjectMonitor = function() {
+	var me = this;
+	clearTimeout(me.botInjectTimeout);
 }
 
 Service.prototype.cancel = function(userModel) {

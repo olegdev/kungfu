@@ -5,15 +5,20 @@
 var config = require(BASE_PATH + '/server/util').getModuleConfig(__filename);
 var logger = require(SERVICES_PATH + '/logger/logger')(__filename);
 var error = require(SERVICES_PATH + '/error');
+var mongoose = require('mongoose');
 var _ = require('underscore');
 
 var leagueRef = require(SERVICES_PATH + '/references/leagues/leagues');
 
-// var battleService = require(SERVICES_PATH + '/battle/battle');
-
 var Service = function() {
 	var me = this;
-	//
+
+	me.rating = [];
+
+	me.interval = setInterval(function() {
+		me.recalcRating();
+	}, 5*60*1000);
+
 }
 
 Service.prototype.finishBattle = function(battle, callback) {
@@ -22,7 +27,7 @@ Service.prototype.finishBattle = function(battle, callback) {
 			battle: battle.asJson()
 		},
 		winUser, loseUser,
-		points;
+		pointsWin, pointsLose;
 
 	// прибиваю ссылки на бой
 	battle.sides[0].u.set('bindings', 'battle', null);
@@ -41,11 +46,13 @@ Service.prototype.finishBattle = function(battle, callback) {
 	loseUser.addons.counters.incValue('loses');
 
 	// рейтинг
-	points = me.calcPoints(winUser, loseUser);
-	winUser.addons.rating.addPoints(points);
-	loseUser.addons.rating.addPoints(-points);
+	pointsWin = me.calcPoints(winUser, loseUser);
+	pointsLose = me.calcPoints(loseUser, winUser);
+	winUser.addons.rating.addPoints(pointsWin);
+	loseUser.addons.rating.addPoints(-pointsLose);
 
-	result.points = points;
+	result.pointsWin = pointsWin;
+	result.pointsLose = pointsLose;
 
 	// лига
 	if (me.maybeNewLeague(winUser)) {
@@ -75,8 +82,7 @@ Service.prototype.calcPoints = function(u1, u2) {
 		leagueInfo = leagueRef.getLeagueByIndex(leagueIndex),
 		u1Points = u1.get('rating', 'points'),
 		u2Points = u2.get('rating', 'points');
-
-	return parseInt(leagueInfo.delta / leagueInfo.fight_count + (u2Points - u1Points) / leagueInfo.fight_count);
+	return parseInt(leagueInfo.delta / leagueInfo.fight_count + ((u2Points - u1Points) / leagueInfo.fight_count)*0.1);
 }
 
 Service.prototype.maybeNewLeague = function(u) {
@@ -90,6 +96,37 @@ Service.prototype.maybeNewLeague = function(u) {
 		u.set('rating', 'league', nextLeague.index);
 		return true;
 	}
+}
+
+/** Перерасчет рейтинга */
+Service.prototype.recalcRating = function(callback) {
+	var me = this,
+		rating;
+
+	callback = callback || function() {};
+
+	mongoose.model('users').find({}, function(err, users) {
+		if (err) {
+			callback(error.factory('rating', 'recalcRating', 'DB error ' + err, logger));
+		} else {
+
+			users = _.sortBy(users, function(user) {
+				return user.rating.points;
+			});
+
+			rating = []; // рейтинг выстраиваю по лигам
+			for(var i = 0; i < leagueRef.data.length; i++) {
+				rating[leagueRef.data[i].index] = [];
+			}
+
+			for(var i = 0; i < users.length; i++) {
+				rating[users[i].rating.league].push(users[i]); 
+			}
+
+			me.rating = rating;
+			callback(null);
+		}
+	});
 }
 
 // Создает только один экземпляр класса

@@ -5,7 +5,7 @@
 <tr>
 	<td><%= messages.getByKey("rating") %>:</td>
 	<td>
-		<%= data.rating.points %>
+		<%= data.rating.place %>
 		<% if (session.get('rating')) { %>
 			 <% if (session.get('rating') > 0) { %> 
 				<span class="green-text" style="font-size: 14px;">(+<%= session.get('rating') %>)</span>

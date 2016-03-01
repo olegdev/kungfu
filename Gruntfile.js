@@ -26,6 +26,9 @@ module.exports = function(grunt) {
             options: {
                 dataFileName: './data/dictionary.txt',
             }
+        },
+        bots: {
+            options: {}
         }
     });
 
@@ -33,6 +36,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('references', require('./tasks/references')(grunt));
     grunt.registerTask('dictionary', require('./tasks/dictionary')(grunt));
+    grunt.registerTask('bots', require('./tasks/bots')(grunt));
 
     grunt.event.on('watch', function(action, filepath) {
         grunt.config("changed_ref_filepath", filepath);

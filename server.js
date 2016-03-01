@@ -22,6 +22,8 @@ var auth = require(SERVICES_PATH + '/auth');
 var sockets = require(SERVICES_PATH + '/sockets');
 var getConfig = require(SERVICES_PATH + '/getconfig/getconfig');
 var dictionary = require(SERVICES_PATH + '/dictionary/dictionary');
+var bots = require(SERVICES_PATH + '/bots/bots');
+var rating = require(SERVICES_PATH + '/rating/rating');
 
 var port = 8081;
 
@@ -149,5 +151,26 @@ dictionary.load(function(err) {
 		/****/ logger.error('Dictionary load error');
 	}
 });
+
+// ============ Load bots ===========
+bots.load(function(err) {
+	if (!err) {
+		/****/ logger.info('Bots loaded');
+		
+	} else {
+		/****/ logger.error('Bots load error');
+	}
+});
+
+// ============ Recalc rating ===========
+rating.recalcRating(function(err) {
+	if (!err) {
+		/****/ logger.info('Rating is ready');
+		
+	} else {
+		/****/ logger.error('Rating calculation error');
+	}
+});
+
 
 /****/ logger.info('Node app started on port ' + port);

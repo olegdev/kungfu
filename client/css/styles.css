@@ -3,6 +3,11 @@
 	src: url("fonts/inglobal.ttf") format("opentype");
 }
 
+/*@font-face {
+	font-family: hand;
+	src: url("fonts/Annabelle.ttf") format("opentype");
+}*/
+
 .green-text {
 	color: #1ECA1E;
 }
@@ -12,7 +17,7 @@
 
 #location, #battle {
 	width: 600px;
-	height: 345px;
+	height: 355px;
 	margin: 150px auto 0 auto;
 	font-family: tin;
 	position: relative;
@@ -208,9 +213,9 @@
 	margin: 18px 0 0 36px;
 }
 #battle-side2 .field .letter {
-	-webkit-transform: rotate(180deg);
+	/*-webkit-transform: rotate(180deg);
 	-moz-transform: rotate(180deg);
-    -o-transform: rotate(180deg);
+    -o-transform: rotate(180deg);*/
 }
 #battle .field {
 	width: 321px;
