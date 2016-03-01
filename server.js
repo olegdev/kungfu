@@ -100,6 +100,14 @@ app.get("/login", function(req, res, next) {
 		res.redirect('/');
 	}
 });
+app.get("/vk", function(req, res, next) {
+	console.log(req.query);
+	// if (!req.session.uid) {
+	// 	console.log(req.body);
+	// } else {
+	// 	res.redirect('/');
+	// }
+});
 app.post('/login', function(req, res, next) {
 	auth
 		.auth(req.body.login, req.body.pass, function(err, uid) {
