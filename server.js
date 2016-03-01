@@ -24,6 +24,7 @@ var getConfig = require(SERVICES_PATH + '/getconfig/getconfig');
 var dictionary = require(SERVICES_PATH + '/dictionary/dictionary');
 var bots = require(SERVICES_PATH + '/bots/bots');
 var rating = require(SERVICES_PATH + '/rating/rating');
+var vk = require(SERVICES_PATH + '/social/vk');
 
 //============= Create server ============
 
@@ -101,12 +102,22 @@ app.get("/login", function(req, res, next) {
 	}
 });
 app.get("/vk", function(req, res, next) {
-	console.log(req.query);
-	// if (!req.session.uid) {
-	// 	console.log(req.body);
-	// } else {
-	// 	res.redirect('/');
-	// }
+	if (!req.session.uid) {
+		vk.auth(req.query, function(err, uid) {
+			if (!err) {
+				if (uid) {
+					req.session.uid = uid;
+					res.redirect('/');
+				} else {
+					res.end('User not found.');
+				}
+			} else {
+				res.status(500).send("Internal server error");	
+			}
+		});
+	} else {
+		res.redirect('/');
+	}
 });
 app.post('/login', function(req, res, next) {
 	auth
@@ -116,7 +127,7 @@ app.post('/login', function(req, res, next) {
 					req.session.uid = uid;
 					res.redirect('/');
 				} else {
-					res.end('Пользователь не найден.');
+					res.end('User not found.');
 				}
 			} else {
 				res.status(500).send("Internal server error");	

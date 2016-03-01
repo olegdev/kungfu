@@ -18,6 +18,10 @@ var Addon = function(model) {
 	this.model = model;
 }
 
+Addon.prototype.init = function() {
+	//
+}
+
 Addon.prototype.getConfig = function() {
 	return this.get();
 }

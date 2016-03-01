@@ -19,6 +19,10 @@ var Addon = function() {
 	this.bindings = {};
 }
 
+Addon.prototype.init = function() {
+	//
+}
+
 Addon.prototype.getConfig = function() {
 	return this.get();
 }

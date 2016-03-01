@@ -18,6 +18,10 @@ var Addon = function(model) {
 	this.model = model;
 }
 
+Addon.prototype.init = function() {
+	this.set('energy', [5,5,1]);
+}
+
 Addon.prototype.getConfig = function() {
 	return this.model.get('timed');
 }

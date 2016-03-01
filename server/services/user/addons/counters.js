@@ -19,6 +19,11 @@ var Addon = function(model) {
 	this.model = model;
 }
 
+Addon.prototype.init = function() {
+	this.set('wins', 0);
+	this.set('loses', 0);
+}
+
 Addon.prototype.getConfig = function() {
 	return this.model.get('counters');
 }

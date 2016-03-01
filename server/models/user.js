@@ -7,6 +7,7 @@ var schema = new mongoose.Schema({
 	auth: {
 		login: String,
 		pass: String,
+		vkId: String,
 	},
 	info: {
 		title: String,

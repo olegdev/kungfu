@@ -13,6 +13,23 @@ var Service = function() {
 	this.safeQueue = {};
 }
 
+Service.prototype.register = function(data, callback) {
+	var me = this,
+		userModel;
+
+	userModel = UserModel.factory();
+	userModel.set('auth', data.auth);
+	userModel.set('info', data.info);
+
+	userModel.model.save(function(err) {
+		if (!err) {
+			callback(null, userModel);
+		} else {
+			callback(error.factory('user', 'register', 'DB error ' + err, logger));
+		}
+	});
+}
+
 Service.prototype.findById = function(uid, callback) {
 	mongoose.model('users').findById(uid, function(err, user) {
 		if (err) {

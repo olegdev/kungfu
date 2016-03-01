@@ -22,6 +22,11 @@ var Addon = function(model) {
 	this.model = model;
 }
 
+Addon.prototype.init = function() {
+	this.set('league', 1);
+	this.set('points', 0);
+}
+
 Addon.prototype.getConfig = function() {
 	return this.get();
 }

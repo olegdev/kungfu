@@ -23,10 +23,21 @@ var Service = function() {
 
 Service.prototype.factory = function(model) {
 	var me = this,
-		addons = {};
+		addons = {},
+		init = false;
+
+	if (!model) {
+		init = true;
+		model = new mongoose.model('users')({});
+	}
+
 	Object.keys(me.addons).forEach(function(addonName) {
 		addons[addonName] = me.addons[addonName].factory(model);
+		if (init) {
+			addons[addonName].init();
+		}
 	});
+
 	return new UserModel(model, addons);
 }
 
