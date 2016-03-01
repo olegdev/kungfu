@@ -25,8 +25,6 @@ var dictionary = require(SERVICES_PATH + '/dictionary/dictionary');
 var bots = require(SERVICES_PATH + '/bots/bots');
 var rating = require(SERVICES_PATH + '/rating/rating');
 
-var port = 8081;
-
 //============= Create server ============
 
 var app = express();
@@ -118,7 +116,7 @@ app.post('/login', function(req, res, next) {
 		});
 });
 
-var server = app.listen(port);
+var server = app.listen(CONFIG.port);
 
 // ============ Socket IO =========
 
@@ -173,4 +171,4 @@ rating.recalcRating(function(err) {
 });
 
 
-/****/ logger.info('Node app started on port ' + port);
+/****/ logger.info('Node app started on port ' + CONFIG.port);
