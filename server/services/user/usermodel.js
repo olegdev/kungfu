@@ -24,11 +24,12 @@ var Service = function() {
 Service.prototype.factory = function(model) {
 	var me = this,
 		addons = {},
-		init = false;
+		init = false,
+		modelClass = mongoose.model('users');
 
 	if (!model) {
 		init = true;
-		model = new mongoose.model('users')({});
+		model = new modelClass({});
 	}
 
 	Object.keys(me.addons).forEach(function(addonName) {

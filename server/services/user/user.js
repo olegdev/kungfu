@@ -15,15 +15,15 @@ var Service = function() {
 
 Service.prototype.register = function(data, callback) {
 	var me = this,
-		userModel;
+		user;
 
-	userModel = UserModel.factory();
-	userModel.set('auth', data.auth);
-	userModel.set('info', data.info);
+	user = userModel.factory();
+	user.set('auth', null, data.auth);
+	user.set('info', null, data.info);
 
-	userModel.model.save(function(err) {
+	user.model.save(function(err) {
 		if (!err) {
-			callback(null, userModel);
+			callback(null, user);
 		} else {
 			callback(error.factory('user', 'register', 'DB error ' + err, logger));
 		}

@@ -8,11 +8,16 @@ var error = require(SERVICES_PATH + '/error');
 var mongoose = require('mongoose');
 var _ = require('underscore');
 var crypto = require('crypto');
+var VKSDK = require('vksdk');
 
 var userService = require(SERVICES_PATH + '/user/user');
 
 var Service = function() {
-	//
+	this.vkApi = new VKSDK({
+	   'appId'     : config.app_id,
+	   'appSecret' : config.app_secret,
+	   'language'  : 'ru'
+	});
 }
 
 Service.prototype.auth = function(request, callback) {
@@ -20,27 +25,34 @@ Service.prototype.auth = function(request, callback) {
 		user;
 
 	if (me.checkSig(request)) {
-		if (request.is_app_user) {
-			mongoose.model('users').findOne({'auth.vkId': request.viewer_id}, function(err, user) {
-				if (err) {
-					callback(error.factory('vk', 'auth', 'DB error ' + err, logger));
+		mongoose.model('users').findOne({'auth.vkId': request.viewer_id}, function(err, user) {
+			if (err) {
+				callback(error.factory('vk', 'auth', 'DB error ' + err, logger));
+			} else {
+				if (user) {
+					console.log('user found');
+					callback(null, user.get('_id'));
 				} else {
-					if (user) {
-						callback(null, user.get('_id'));
-					} else {
-						callback(null, false);
-					}
+					me.vkApi.request('users.get', {'user_id' : 25927668, fields: ['photo_50']}, function(userInfo) {
+					   	userService.register({
+					   		auth: {
+					   			vkId: request.viewer_id
+					   		},
+					   		info: {
+					   			title: userInfo.first_name + ' ' + userInfo.last_name,
+					   			img: userInfo.photo_50,
+					   		}
+					   	}, function(err, userModel) {
+							if (!err) {
+								callback(null, userModel.model.id);
+							} else {
+								callback(error.factory('vk', 'auth', 'User register error ' + err, logger));
+							}
+						}); 
+					});
 				}
-			});
-		} else {
-			userService.register({auth: {vkId: request.viewer_id, info: {title: 'u', img: ''}}}, function(err, userModel) {
-				if (!err) {
-					callback(error.factory('vk', 'auth', 'User register error ' + err, logger));
-				} else {
-					callback(null, userModel.model.id);
-				}
-			});
-		}
+			}
+		});
 	} else {
 		callback(error.factory('vk', 'auth', 'Request signature is not valid', logger));
 	}
