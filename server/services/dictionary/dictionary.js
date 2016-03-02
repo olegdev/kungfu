@@ -107,7 +107,6 @@ Service.prototype.hasWord = function(word) {
 Service.prototype.getRandomWord = function(wordLength) {
 	var me = this,
 		word;
-	console.log('while d3');
 	while(!word) {
 		var randomIndex = _.random(0, me.dictionary.words.length);
 		if (wordLength) {
@@ -121,7 +120,6 @@ Service.prototype.getRandomWord = function(wordLength) {
 			word = me.dictionary.words[randomIndex];
 		}
 	}
-	console.log('end while d3');
 	return word;
 }
 
@@ -140,6 +138,7 @@ Service.prototype.generateLetter = function(letters) {
 		count = 0,
 		glCount = 0,
 		hardCount = 0,
+		tryes = 0,
 		randomIndex,
 		group, groups;
 
@@ -164,33 +163,29 @@ Service.prototype.generateLetter = function(letters) {
 	// определяю возможные группы для буквы
 	if (glCount / count > 0.4) {
 		if (hardCount / count > 0.2) {
-			groups = [me.letters.sgl];
+			group = me.letters.sgl;
 		} else {
-			groups = [me.letters.sgl, me.letters.hardSgl];
+			group = _.union(me.letters.sgl, me.letters.hardSgl);
 		}
 	} else {
 		if (hardCount / count > 0.2) {
-			groups = [me.letters.gl];
+			group = me.letters.gl;
 		} else {
-			groups = [me.letters.gl, me.letters.hardGl];
+			group = _.union(me.letters.gl, me.letters.hardGl);
 		}
 	}
 
-	group = groups[_.random(0, groups.length-1)];
 	randomIndex = _.random(0, group.length-1);
-
-	console.log('while d 1', group);
 	do {
 		letter = group[randomIndex];
 
 		// не может быть повторов сложных букв, обычные буквы повторяются до 2х раз, не может быть повторов, если букв меньше 10
-		if ((setOfLetters[letter] > 0 && (count <= 10 || config.letters[letter].hard)) || setOfLetters[letter] > 1) { 
+		if (((setOfLetters[letter] > 0 && (count <= 10 || config.letters[letter].hard)) || setOfLetters[letter] > 1) && tryes++ <= group.length) { 
 			letter = null;
 			randomIndex = randomIndex < group.length-1 ? randomIndex + 1 : 0;
 		}
 
 	} while(!letter);
-	console.log('end while d 1');
 
 	return letter;
 }
@@ -250,11 +245,9 @@ Service.prototype.getChanceWordFromLetters = function(letters) {
 		wordLength = 6;
 	}
 
-	console.log('while dict 2');
 	while(!word && wordLength > 2) {
 		word = me.getWordFromLetters(letters, wordLength--);
 	}
-	console.log('end while d2');
 
 	return word;
 }
