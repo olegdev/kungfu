@@ -76,10 +76,6 @@ app.set('view engine', 'handlebars');
 
 // ============== ROUTES ================
 
-app.get('/a115ea59900e.html', function(req, res, next) {
-   res.status(200).send("ce380d4fa9ed");
-});
-
 app.get("/", function(req, res, next) {
 	if (!req.session.uid) {		
 		res.redirect('/login');
