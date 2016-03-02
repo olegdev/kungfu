@@ -12,7 +12,7 @@ define([
 		className: 'field',
 		cellWidth: 55 + 7,
 		cellHeight: 55+ 6,
-		defaultAngleOfLettersRotation: 180,
+		defaultAngleOfLettersRotation: 0,
 
 		template: _.template(tpl),
 

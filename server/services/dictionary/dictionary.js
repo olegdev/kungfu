@@ -107,6 +107,7 @@ Service.prototype.hasWord = function(word) {
 Service.prototype.getRandomWord = function(wordLength) {
 	var me = this,
 		word;
+	console.log('while d3');
 	while(!word) {
 		var randomIndex = _.random(0, me.dictionary.words.length);
 		if (wordLength) {
@@ -120,6 +121,7 @@ Service.prototype.getRandomWord = function(wordLength) {
 			word = me.dictionary.words[randomIndex];
 		}
 	}
+	console.log('end while d3');
 	return word;
 }
 
@@ -176,6 +178,8 @@ Service.prototype.generateLetter = function(letters) {
 
 	group = groups[_.random(0, groups.length-1)];
 	randomIndex = _.random(0, group.length-1);
+
+	console.log('while d 1', group);
 	do {
 		letter = group[randomIndex];
 
@@ -186,6 +190,7 @@ Service.prototype.generateLetter = function(letters) {
 		}
 
 	} while(!letter);
+	console.log('end while d 1');
 
 	return letter;
 }
@@ -245,9 +250,11 @@ Service.prototype.getChanceWordFromLetters = function(letters) {
 		wordLength = 6;
 	}
 
+	console.log('while dict 2');
 	while(!word && wordLength > 2) {
 		word = me.getWordFromLetters(letters, wordLength--);
 	}
+	console.log('end while d2');
 
 	return word;
 }
