@@ -34,7 +34,7 @@ Service.prototype.auth = function(request, callback) {
 					callback(null, user.get('_id'));
 				} else {
 					console.log('request');
-					me.vkApi.request('users.get', {'user_id': request.viewer_id, fields: ['photo_50']}, function(resp) {
+					me.vkApi.request('users.get', {user_id: request.viewer_id, fields: ['photo_50'], lang: 'ru'}, function(resp) {
 						if (resp && resp.response && resp.response.length) {
 							userService.register({
 						   		auth: {
