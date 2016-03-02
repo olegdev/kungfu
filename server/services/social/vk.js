@@ -64,7 +64,6 @@ Service.prototype.auth = function(request, callback) {
 }
 
 Service.prototype.checkSig = function(request) {
-	return true;
 	var str = request.api_id + '_' + request.viewer_id + '_' + config.app_secret;
 	return request.auth_key === crypto.createHash('md5').update(str).digest('hex');
 }

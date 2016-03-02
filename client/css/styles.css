@@ -82,6 +82,8 @@
 	border: 1px solid #357F96;
 	border-radius: 35px;
 	float: right;
+	width: 50px;
+	height: 50px;
 }
 .user-avatar.rtl img {
 	float: none;
@@ -97,7 +99,7 @@
     display: block;
     text-align: center;
     width: 148px;
-    height: 44px;
+    height: 38px;
     overflow: hidden;
     text-overflow: ellipsis;
     margin-top: 5px;
@@ -111,11 +113,11 @@
  * Информация о игроке на главной странице
  */
 #infoview-box {
-	width: 220px;
+	width: 232px;
 	overflow: hidden;
 	float: left;
     padding: 36px 0 0 36px;
-    margin-right: 68px;
+    margin-right: 61px;
     color: #357F96;
     border-radius: 3px;
 }
@@ -151,7 +153,7 @@
     font-family: tin;
     font-size: 14px;
 }
-#controlsview-box #rating-btn {
+#controlsview-box #rating-btn, #controlsview-box #group-btn {
 	background-color: #567DBF;
 }
 
@@ -255,6 +257,9 @@
 	cursor: pointer;
     background-color: #AFCBE6;
     color: #444;
+}
+#battle-side2 .field .letter {
+	cursor: default;
 }
 #battle .field .letter.selected {
 	background-color: #7CA5CC;

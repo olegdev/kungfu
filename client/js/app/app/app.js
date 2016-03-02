@@ -39,7 +39,13 @@ define([
 
 			var errorChannel = sockets.createChannel('error');
 			errorChannel.on('error', function(data) {
-				alert(data.msg);
+				if (APP.config.debug) {
+					alert(data.msg);
+				} else {
+					if (console && console.error) {
+						console.error(data.msg);
+					}
+				}
 			});
 
 			return APP;
