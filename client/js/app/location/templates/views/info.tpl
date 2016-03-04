@@ -8,9 +8,9 @@
 		<%= data.rating.place %>
 		<% if (session.get('rating')) { %>
 			 <% if (session.get('rating') > 0) { %> 
-				<span class="green-text" style="font-size: 14px;">(+<%= session.get('rating') %>)</span>
+				<span class="green-text" style="font-size: 10px;">(+<%= session.get('rating') %>)</span>
 			<% } else {%>
-				<span class="red-text" style="font-size: 14px;">(<%= session.get('rating') %>)</span>
+				<span class="red-text" style="font-size: 10px;">(<%= session.get('rating') %>)</span>
 			<% } %>	
 		<% } %>
 	</td>
@@ -21,7 +21,7 @@
 	<td>
 		<%= data.counters.wins %>
 		<% if (session.get('win_counts')) { %>
-		<span class="green-text" style="font-size: 14px;">(+<%= session.get('win_counts') %>)</span>
+		<span class="green-text" style="font-size: 10px;">(+<%= session.get('win_counts') %>)</span>
 		<% } %>
 	</td>
 </tr>
@@ -32,7 +32,7 @@
 	<td>
 		<%= data.counters.loses %>
 		<% if (session.get('lose_counts')) { %>
-		<span class="red-text" style="font-size: 14px;">(+<%= session.get('lose_counts') %>)</span>
+		<span class="red-text" style="font-size: 10px;">(+<%= session.get('lose_counts') %>)</span>
 		<% } %>
 	</td>
 </tr>

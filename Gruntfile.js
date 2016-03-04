@@ -29,6 +29,13 @@ module.exports = function(grunt) {
         },
         bots: {
             options: {}
+        },
+        px_to_em: {
+            options: {
+                dataFileName: 'px.txt',
+                destFileName: 'em.txt',
+                emSize: 1.333,
+            }
         }
     });
 
@@ -37,6 +44,7 @@ module.exports = function(grunt) {
     grunt.registerTask('references', require('./tasks/references')(grunt));
     grunt.registerTask('dictionary', require('./tasks/dictionary')(grunt));
     grunt.registerTask('bots', require('./tasks/bots')(grunt));
+    grunt.registerTask('px_to_em', require('./tasks/px_to_em')(grunt));
 
     grunt.event.on('watch', function(action, filepath) {
         grunt.config("changed_ref_filepath", filepath);

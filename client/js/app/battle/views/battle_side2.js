@@ -10,8 +10,8 @@ define([
 	var View = Backbone.View.extend({
 
 		className: 'field',
-		cellWidth: 55 + 7,
-		cellHeight: 55+ 6,
+		cellWidth: 41 + 5,
+		cellHeight: 41 + 5,
 		defaultAngleOfLettersRotation: 0,
 
 		template: _.template(tpl),

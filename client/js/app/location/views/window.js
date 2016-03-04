@@ -21,8 +21,8 @@ define([
 
 		initialize: function(config) {
 			_.extend(this, {
-				width: 600,
-				height: 300,
+				width: 450,
+				height: 225,
 			}, config || {});
 
 			this.render();

@@ -16,24 +16,24 @@
 }
 
 #location, #battle {
-	width: 600px;
-	height: 355px;
-	margin: 150px auto 0 auto;
+	width: 450px;
+	height: 266px;
+	margin: 113px auto 0 auto;
 	font-family: tin;
 	position: relative;
 	border: 1px solid #ccc;
-	border-radius: 3px;
+	border-radius: 2px;
 }
 
 #location .location-title,
 #window .window-title {
 	background-color: rgb(240, 249, 245);
-	height: 40px;
+	height: 30px;
 	text-align: center;
 	color: #357F96;
-	border-radius: 3px;
-	line-height: 36px;
-    font-size: 18px;
+	border-radius: 2px;
+	line-height: 27px;
+    font-size: 14px;
 }
 
 /**
@@ -41,21 +41,21 @@
  */
 #window {
 	position: absolute;
-	top: 150px;
+	top: 113px;
 	border: 1px solid #ccc;
 	background-color: #fff;
-	border-radius: 3px;
+	border-radius: 2px;
 	font-family: tin;
 }
 #window .window-close {
 	position: absolute;
     top: 0px;
     right: 0px;
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     background: #E89B62;
     cursor: pointer;
-    font-size: 32px;
+    font-size: 24px;
     color: #fff;
     font-family: arial;
     text-align: center;
@@ -74,16 +74,16 @@
  * Аватарка юзера с ником
  */
 .user-avatar {
-	width: 200px;
-	height: 56px;
+	width: 150px;
+	height: 42px;
 	color: #357F96;
 }
 .user-avatar img {
 	border: 1px solid #357F96;
-	border-radius: 35px;
+	border-radius: 26px;
 	float: right;
-	width: 50px;
-	height: 50px;
+	width: 38px;
+	height: 38px;
 }
 .user-avatar.rtl img {
 	float: none;
@@ -94,15 +94,16 @@
 }
 .user-avatar span {
 	font-weight: bold;
-	font-size: 16px;
+	font-size: 14px;
+	line-height: 14px;
 	float: right;
     display: block;
     text-align: center;
-    width: 148px;
-    height: 38px;
+    width: 110px;
+    height: 29px;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-top: 5px;
+    margin-top: 4px;
 }
 .user-avatar span.loading {
 	background-image: url(../img/loader4.gif);
@@ -113,45 +114,47 @@
  * Информация о игроке на главной странице
  */
 #infoview-box {
-	width: 232px;
+	width: 201px;
 	overflow: hidden;
 	float: left;
-    padding: 36px 0 0 36px;
-    margin-right: 61px;
+    padding: 27px 0 0 27px;
+    margin-right: 28px;
     color: #357F96;
-    border-radius: 3px;
+    border-radius: 2px;
+    font-size: 14px;
+
 }
 #infoview-box table {
-	margin: 10px 0 0 18px;
+	margin: 8px 0 0 14px;
 }
 #infoview-box td {
-	padding: 0px 5px 11px 0;
+	padding: 0px 4px 8px 0;
 }
 #infoview-box td:nth-child(even) {
 	font-weight: bold;
 }
 
 #controlsview-box {
-	width: 232px;
+	width: 174px;
 	overflow: hidden;
-	padding-top: 44px;
+	padding-top: 33px;
 }
 #controlsview-box ul {
-	margin: -5px 0 0 0;
+	margin: -4px 0 0 0;
 }
 #controlsview-box li {
-	padding: 5px 0;
+	padding: 4px 0;
 }
 #controlsview-box li button {
-	height: 46px;
-	width: 210px;
+	height: 35px;
+	width: 158px;
 	background-color: #1ECA1E;
     border: none;
-    border-radius: 4px;
+    border-radius: 3px;
     color: #fff;
     cursor: pointer;
     font-family: tin;
-    font-size: 14px;
+    font-size: 11px;
 }
 #controlsview-box #rating-btn, #controlsview-box #group-btn {
 	background-color: #567DBF;
@@ -161,7 +164,7 @@
  * Оппоненты (x VS y)
  */
 .opponents {
-	margin: 36px 0 0 36px;
+	margin: 27px 0 0 27px;
 }
 
 .opponents .user-avatar {
@@ -172,11 +175,11 @@
  .opponents .vs-sign {
     display: inline-block;
     overflow: hidden;
-    height: 56px;
-    line-height: 56px;
-    padding: 0 42px;
-    font-size: 18px;
-    font-size: 18px;
+    height: 42px;
+    line-height: 42px;
+    padding: 0 32px;
+    font-size: 14px;
+    font-size: 14px;
     color: #E89B62;
     font-weight: bold;
 }
@@ -185,16 +188,16 @@
  * Окно поиска противника
  **/
 #battle-search-window .hints {
-    padding: 40px;
+    padding: 30px;
     text-align: center;
     vertical-align: middle;
     background-color: rgb(240, 249, 245);
-    margin: 48px 0px 0;
+    margin: 36px 0px 0;
     border: 1px solid #ccc;
     border-width: 1px 0 0 0;
-    height: 35px;
+    height: 25px;
     overflow: hidden;
-    border-radius: 3px;
+    border-radius: 2px;
     font-style: italic;
 }
 
@@ -212,7 +215,7 @@
     -o-user-select: none;
 }
 #battle .opponents {
-	margin: 18px 0 0 36px;
+	margin: 14px 0 0 27px;
 }
 #battle-side2 .field .letter {
 	/*-webkit-transform: rotate(180deg);
@@ -220,37 +223,37 @@
     -o-transform: rotate(180deg);*/
 }
 #battle .field {
-	width: 321px;
-    height: 314px;
+	width: 236px;
+    height: 236px;
     border: 1px solid #ccc;
-    margin: 7px auto;
-    border-radius: 3px;
+    margin: 5px auto;
+    border-radius: 2px;
     text-align: center;
 }
 #battle .field-inner {
-	margin: 6px 0 0 8px;
+	margin: 5px 0 0 6px;
     position: relative;
     overflow: hidden;
 }
 #battle .field .cell {
-	width: 55px;
-	height: 55px;
-	line-height: 54px;
+	width: 41px;
+	height: 41px;
+	line-height: 41px;
 	display: block;
     background-color: #F1E9E9;
-    border-radius: 5px;
+    border-radius: 4px;
     float: left;
-    margin: 0 7px 6px 0;
+    margin: 0 5px 5px 0;
 }
 #battle .field .letter {
-	width: 55px;
-	height: 55px;
-	line-height: 54px;
+	width: 41px;
+	height: 41px;
+	line-height: 41px;
     text-transform: uppercase;
-    font-size: 22px;
+    font-size: 17px;
     background-color: #F1E9E9;
     position: absolute;
-    border-radius: 5px;
+    border-radius: 4px;
     transition: top .2s ease, left .2s ease;
 }
 #battle .field .letter {
@@ -270,22 +273,22 @@
 	z-index: 1;
 }
 #battle .field .letter.src-anim {
-	top: -120px !important;
+	top: -90px !important;
 	transition: top 0.5s ease;
 }
 #battle .field .letter.src-anim2 {
-	top: 350px !important;
+	top: 263px !important;
 	transition: top 0.5s ease;
 }
 #battle .field .letter.dest-anim {
 	background-color: #F9BD82 !important;
-	top: -120px;
+	top: -90px;
 	transition: top 0.5s ease;
 	z-index: 2;
 }
 #battle .field .letter.dest-anim2 {
 	background-color: #F9BD82;
-	top: 350px;
+	top: 263px;
 	transition: top 0.5s ease;
 	z-index: 2;
 }
@@ -295,43 +298,43 @@
 
 /** Контейнер слова **/
 #word-container {
-	width: 535px;
-	height: 50px;
+	width: 401px;
+	height: 38px;
     text-align: center;
     background-color: #FBFBFB;
-    border-radius: 3px;
+    border-radius: 2px;
     border: 1px solid #ccc;
-    padding: 6px 0;
-    margin:	20px auto 0;
+    padding: 2px 0;
+    margin:	15px auto 0;
 }
 #word-container.valid li {
 	background-color: #41EC6C;
 	cursor: pointer;
 }
 #word-container.more-letters li {
-	width: 35px;
+	width: 26px;
 }
 #word-container li {
-	width: 50px;
-    height: 50px;
-    line-height: 50px;
+	width: 38px;
+    height: 38px;
+    line-height: 38px;
     display: inline-block;
     background-color: #F9BD82;
     text-transform: uppercase;
     text-align: center;
-    font-size: 18px;
+    font-size: 14px;
     font-style: italic;
 }
 #word-container li:first-child {
-	border-radius: 3px 0 0 3px;
+	border-radius: 2px 0 0 2px;
 }
 #word-container li:last-child {
-	border-radius: 0 3px 3px 0;
+	border-radius: 0 2px 2px 0;
 }
 #word-container .hint {
-	font-size: 17px;
+	font-size: 13px;
 	display: inline-block;
-	margin-top: 15px;
+	margin-top: 11px;
 	font-style: italic;
 	color: #444;
 }
@@ -340,14 +343,14 @@
 #battle-result-window .rating-points, #battle-result-window .new-league-text {
 	text-align: center;
     color: #357F96;
-    line-height: 36px;
-    font-size: 26px;
-    margin: 37px 0 0 0;
+    line-height: 27px;
+    font-size: 20px;
+    margin: 28px 0 0 0;
     font-weight: bold;
 }
 #battle-result-window .new-league-text {
-	margin: 16px 0 0 0;
-	font-style: 30px;
+	margin: 12px 0 0 0;
+	font-style: 23px;
 }
 
 
@@ -358,8 +361,8 @@
 	font-family: tin;
 	transition: font-size 0.7s cubic-bezier(0.4, 0, 1, 1), opacity 1.7s cubic-bezier(0.4, 0, 1, 1), left 0.7s cubic-bezier(0.4, 0, 1, 1);
 	position: absolute;
-	top: 250px;
-	left: 950px;
+	top: 188px;
+	left: 713px;
 	z-index: 1;
 }
 #s1 {
