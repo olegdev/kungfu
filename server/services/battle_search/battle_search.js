@@ -62,13 +62,15 @@ Service.prototype.startBotIjectMonitor = function() {
 	var me = this,
 		u1;
 	me.botInjectTimeout = setTimeout(function() {
-		u1 = me.queue.shift();
-		u2 = botsService.findBotForUser(u1);
-		if (u2) {
-			me.goBattle(u1, u2);
-		} else {
-			// не подобрался .. возможно все в бою, стартую новый монитор
-			me.startBotIjectMonitor();
+		if (me.queue.length == 1) {
+			u1 = me.queue.shift();
+			u2 = botsService.findBotForUser(u1);
+			if (u2) {
+				me.goBattle(u1, u2);
+			} else {
+				// не подобрался .. возможно все в бою, стартую новый монитор
+				me.startBotIjectMonitor();
+			}
 		}
 	}, _.random(2,5) * 1000);
 }
