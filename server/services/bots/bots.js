@@ -150,12 +150,9 @@ Service.prototype.makeHit = function(bot) {
 			wordLength = 5;
 		}
 
-		console.log('find word');
 		do {
 			word = dictionaryService.getWordFromLetters(letters, wordLength);
 		} while(!word && --wordLength >= 3);
-		console.log('find word end');
-
 
 		if (word) {
 			word = word.split('');
@@ -168,10 +165,7 @@ Service.prototype.makeHit = function(bot) {
 					}
 				}
 			}
-			console.log('push word');
 			battleService.onWord(bot, {word: wordData}, function() {});
-		} else {
-			console.log('not found word');
 		}
 
 	} else {
