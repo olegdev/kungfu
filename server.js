@@ -89,6 +89,9 @@ app.get("/", function(req, res, next) {
 					}
 					res.render('main', {layout: 'main'});
 				} else {
+					if (!config) {
+						/****/ logger.error('Config for user id ' + req.session.uid + ' not found');
+					}
 					res.status(500).send("Internal server error");
 				}
 			});
@@ -102,22 +105,18 @@ app.get("/login", function(req, res, next) {
 	}
 });
 app.get("/vk", function(req, res, next) {
-	if (!req.session.uid) {
-		vk.auth(req.query, function(err, uid) {
-			if (!err) {
-				if (uid) {
-					req.session.uid = uid;
-					res.redirect('/');
-				} else {
-					res.end('User not found.');
-				}
+	vk.auth(req.query, function(err, uid) {
+		if (!err) {
+			if (uid) {
+				req.session.uid = uid;
+				res.redirect('/');
 			} else {
-				res.status(500).send("Internal server error");	
+				res.end('User not found.');
 			}
-		});
-	} else {
-		res.redirect('/');
-	}
+		} else {
+			res.status(500).send("Internal server error");	
+		}
+	});
 });
 app.post('/login', function(req, res, next) {
 	auth
