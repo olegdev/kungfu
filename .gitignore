@@ -1,5 +1,6 @@
 server.config
-/log
+/log         
+/ssl
 node_modules
 vendor
 /server/services/dictionary/ru

@@ -115,7 +115,7 @@ Service.prototype.startBattleBotsMonitor = function() {
 			}
 		}
 
-	}, 300000);
+	}, 3000);
 }
 
 // наносит удар

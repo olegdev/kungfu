@@ -135,15 +135,15 @@ app.post('/login', function(req, res, next) {
 });
 
 var server = app.listen(CONFIG.port);
-var httpsServer = https.createServer({
+var serverHttps = https.createServer({
       key: fs.readFileSync('./ssl/private'),
       cert: fs.readFileSync('./ssl/certificate')
-    }, app).listen(CONFIG.port);
+    }, app).listen(CONFIG.portHttps);
 
 // ============ Socket IO =========
 
 var sio = sockets.listen(server);
-var sio2 = sockets.listen(httpsServer);
+var sio2 = sockets.listen(serverHttps);
 
 sio.use(function(socket, next) {
     sessionMiddleware(socket.request, socket.request.res, next);
@@ -201,3 +201,4 @@ rating.recalcRating(function(err) {
 
 
 /****/ logger.info('Node app started on port ' + CONFIG.port);
+/****/ logger.info('Node https app started on port ' + CONFIG.portHttps);
