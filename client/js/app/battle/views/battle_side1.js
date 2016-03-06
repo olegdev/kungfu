@@ -28,6 +28,7 @@ define([
 				letters: this.config.letters,
 			});
 			this.wordView.on('submit', _.bind(this.onWordSubmit, this));
+			this.wordView.on('clear', _.bind(this.onWordClear, this));
 
 			setTimeout(function() {
 				me.$el.parent().append(me.wordView.$el);
@@ -62,6 +63,10 @@ define([
 			});
 
 			this.trigger('submit', word);
+		},
+
+		onWordClear: function(word) {
+			this.$el.find('.selected').removeClass('selected');
 		},
 
 		/**** Анимация источника */

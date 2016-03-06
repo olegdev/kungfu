@@ -20,7 +20,8 @@ define([
 		valid: false,
 
 		events: {
-			'click' : 'onClick',
+			'click li' : 'onWordClick',
+			'click .clear-word-btn' : 'onClearClick',
 		},
 
 		// @cfg
@@ -89,12 +90,18 @@ define([
 			this.render();
 		},
 
-		onClick: function() {
+		onWordClick: function() {
 			if (this.$el.hasClass('valid')) {
 				this.trigger('submit', this.word);
 				this.word = [];
 				this.onChange();
 			}
+		},
+
+		onClearClick: function() {
+			this.trigger('clear');
+			this.word = [];
+			this.onChange();			
 		}
 
 	});

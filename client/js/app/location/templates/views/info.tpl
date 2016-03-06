@@ -1,6 +1,11 @@
 <%= userAvatarView.print(data) %>
 <table>
-<tr><td><%= messages.getByKey("energy") %>:</td><td><%= data.timed.energy[0] %></td></tr>
+<tr>
+	<td>
+		<%= messages.getByKey("energy") %>:</td><td><%= data.timed.energy[0] %>
+		<div class="add-energy-btn" title="<%= messages.getByKey('add-energy-btn-tip') %>"></div>
+	</td>
+</tr>
 <tr><td><%= messages.getByKey("league") %>:</td><td><%= leagues.getNameByIndex(data.rating.league) %></td></tr>
 <tr>
 	<td><%= messages.getByKey("rating") %>:</td>
@@ -8,9 +13,9 @@
 		<%= data.rating.place %>
 		<% if (session.get('rating')) { %>
 			 <% if (session.get('rating') > 0) { %> 
-				<span class="green-text" style="font-size: 10px;">(+<%= session.get('rating') %>)</span>
+				<span class="green-text" style="font-size: 11px;">(+<%= session.get('rating') %>)</span>
 			<% } else {%>
-				<span class="red-text" style="font-size: 10px;">(<%= session.get('rating') %>)</span>
+				<span class="red-text" style="font-size: 11px;">(<%= session.get('rating') %>)</span>
 			<% } %>	
 		<% } %>
 	</td>
@@ -21,7 +26,7 @@
 	<td>
 		<%= data.counters.wins %>
 		<% if (session.get('win_counts')) { %>
-		<span class="green-text" style="font-size: 10px;">(+<%= session.get('win_counts') %>)</span>
+		<span class="green-text" style="font-size: 11px;">(+<%= session.get('win_counts') %>)</span>
 		<% } %>
 	</td>
 </tr>
@@ -32,7 +37,7 @@
 	<td>
 		<%= data.counters.loses %>
 		<% if (session.get('lose_counts')) { %>
-		<span class="red-text" style="font-size: 10px;">(+<%= session.get('lose_counts') %>)</span>
+		<span class="red-text" style="font-size: 11px;">(+<%= session.get('lose_counts') %>)</span>
 		<% } %>
 	</td>
 </tr>

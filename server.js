@@ -11,7 +11,7 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var exphbs = require('express-handlebars');
 var mongoose = require('mongoose');
-var winston = require('winston');
+var https = require('https');
 var fs = require('fs');
 var join = require('path').join;
 
@@ -135,15 +135,26 @@ app.post('/login', function(req, res, next) {
 });
 
 var server = app.listen(CONFIG.port);
+var httpsServer = https.createServer({
+      key: fs.readFileSync('../ssl/private'),
+      cert: fs.readFileSync('../ssl/certificate')
+    }, app).listen(CONFIG.port);
 
 // ============ Socket IO =========
 
 var sio = sockets.listen(server);
+var sio2 = sockets.listen(httpsServer);
 
 sio.use(function(socket, next) {
     sessionMiddleware(socket.request, socket.request.res, next);
 });
 sio.use(function(socket, next) {
+    dbconnect(socket.request, socket.request.res, next);
+});
+sio2.use(function(socket, next) {
+    sessionMiddleware(socket.request, socket.request.res, next);
+});
+sio2.use(function(socket, next) {
     dbconnect(socket.request, socket.request.res, next);
 });
 

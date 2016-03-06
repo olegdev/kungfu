@@ -15,6 +15,18 @@
 	color: #E89B62;
 }
 
+button {
+	height: 35px;
+	width: 158px;
+	background-color: #1ECA1E;
+    border: none;
+    border-radius: 3px;
+    color: #fff;
+    cursor: pointer;
+    font-family: tin;
+    font-size: 11px;
+}
+
 #location, #battle {
 	width: 450px;
 	height: 266px;
@@ -133,6 +145,16 @@
 #infoview-box td:nth-child(even) {
 	font-weight: bold;
 }
+#infoview-box .add-energy-btn {
+	width: 16px;
+	height: 16px;
+	background-image: url(../img/plus1.png);
+	background-repeat: no-repeat;
+	cursor: pointer;
+	display: inline-block;
+	background-size: contain;
+	margin: 0 0 -2px 2px;
+}
 
 #controlsview-box {
 	width: 174px;
@@ -148,13 +170,6 @@
 #controlsview-box li button {
 	height: 35px;
 	width: 158px;
-	background-color: #1ECA1E;
-    border: none;
-    border-radius: 3px;
-    color: #fff;
-    cursor: pointer;
-    font-family: tin;
-    font-size: 11px;
 }
 #controlsview-box #rating-btn, #controlsview-box #group-btn {
 	background-color: #567DBF;
@@ -306,6 +321,7 @@
     border: 1px solid #ccc;
     padding: 2px 0;
     margin:	15px auto 0;
+    position: relative;
 }
 #word-container.valid li {
 	background-color: #41EC6C;
@@ -313,6 +329,9 @@
 }
 #word-container.more-letters li {
 	width: 26px;
+}
+#word-container ul {
+	display: inline-block;
 }
 #word-container li {
 	width: 38px;
@@ -338,7 +357,19 @@
 	font-style: italic;
 	color: #444;
 }
-
+#word-container .clear-word-btn {
+	display: inline-block;
+	top: 7px;
+	right: 6px;
+	position: absolute;
+	font-family: arial;
+	color: #777;
+	font-size: 23px;
+	cursor: pointer;
+}
+#word-container .clear-word-btn:hover {
+	color: #444;
+}
 /*** Окно результатов боя */
 #battle-result-window .rating-points, #battle-result-window .new-league-text {
 	text-align: center;
@@ -353,6 +384,28 @@
 	font-style: 23px;
 }
 
+/*** Окно восстановления эрегии */
+#energy-window {
+	color: #444;
+}
+#energy-window .hints {
+    text-align: center;
+    vertical-align: middle;
+    margin: 14px 0px 0;
+    height: 38px;
+    overflow: hidden;
+    border-radius: 2px;
+    font-style: italic;
+}
+#energy-window button {
+	width: 127px;
+	font-size: 14px;
+	margin: 12px 11px 0 28px;
+}
+#energy-window #money-energy-btn {
+	background-color: #567DBF;
+	margin: 20px 11px 0 28px;
+}
 
 #s1,#s2 {
 	font-size: 0px;

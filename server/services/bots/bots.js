@@ -115,7 +115,7 @@ Service.prototype.startBattleBotsMonitor = function() {
 			}
 		}
 
-	}, 3000);
+	}, 300000);
 }
 
 // наносит удар
@@ -171,7 +171,6 @@ Service.prototype.makeHit = function(bot) {
 	} else {
 		/***/ error.factory('bots', 'makeHit', 'Battle not found', logger)
 	}
-
 }
 
 
