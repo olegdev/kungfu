@@ -136,8 +136,8 @@ app.post('/login', function(req, res, next) {
 
 var server = app.listen(CONFIG.port);
 var httpsServer = https.createServer({
-      key: fs.readFileSync('../ssl/private'),
-      cert: fs.readFileSync('../ssl/certificate')
+      key: fs.readFileSync('./ssl/private'),
+      cert: fs.readFileSync('./ssl/certificate')
     }, app).listen(CONFIG.port);
 
 // ============ Socket IO =========
