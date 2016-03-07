@@ -25,7 +25,7 @@ Addon.prototype.init = function() {
 
 Addon.prototype.getConfig = function() {
 	if (this.get('vkId')) {
-		return {vk: true};
+		return {vkId: this.get('vkId')};
 	} else {
 		return {email: true};
 	}

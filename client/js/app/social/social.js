@@ -17,7 +17,7 @@ define([
 
 	var socialApi;
 
-	if (config.user.auth.vk) {
+	if (config.user.auth.vkId) {
 		socialApi = vk;
 	}
 
