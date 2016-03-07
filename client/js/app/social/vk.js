@@ -31,43 +31,31 @@ define([
 
 			VK.api('photos.getWallUploadServer', function(result) {
 
-				vkChannel.push('upload_wallpost_image', {upload_url: result.response.upload_url, image: image}, function() {
-					console.log('image uploaded');
-					callback();
+				vkChannel.push('upload_wallpost_image', {upload_url: result.response.upload_url, image: image}, function(data) {
+					console.log('upload finished');
+					console.log(data);
+
+					// VK.api('photos.saveWallPhoto', result.response, function(result) {
+					// 	var photo = result.response[0].id;
+
+					// 	var params = {
+					// 		message: message + ' http://vk.com/app' + config.user.payment_app + '_' + user.get('social').social_net_id + '#msg_id' + getUID(),
+					// 		attachments: photo
+					// 	}
+
+					// 	if (viewerId) {
+					// 		params.owner_id = viewerId;
+					// 	}
+
+					// 	VK.api('wall.post',params,function(result) {
+					// 		if (result.response && result.response.post_id) {
+					// 			if (callback) {
+					// 				callback();
+					// 			}
+					// 		}
+					// 	});
+					// });
 				});
-
-				// me.request({
-				// 	url: '/vka.pl',
-				// 	params: {
-				// 		cmd: 'wallupload',
-				// 		url: result.response.upload_url,
-				// 		image: image
-				// 	},
-
-				// 	success: function(result) {
-				// 		VK.api('photos.saveWallPhoto', result.response, function(result) {
-
-				// 			var photo = result.response[0].id;
-
-				// 			var params = {
-				// 				message: message + ' http://vk.com/app' + config.user.payment_app + '_' + user.get('social').social_net_id + '#msg_id' + getUID(),
-				// 				attachments: photo
-				// 			}
-
-				// 			if (viewerId) {
-				// 				params.owner_id = viewerId;
-				// 			}
-
-				// 			VK.api('wall.post',params,function(result) {
-				// 				if (result.response && result.response.post_id) {
-				// 					if (callback) {
-				// 						callback();
-				// 					}
-				// 				}
-				// 			});
-				// 		});
-				// 	}
-				// });
 			});
 		}
 	};

@@ -22,12 +22,10 @@ API.prototype.cmdUploadWallpostImage = function(userModel, data, callback) {
 	var me = this,
 		imagePath = BASE_PATH + '/client/img/' + data.image;
 
-	if (!data.image || data.upload_url) {
+	if (!data.image || !data.upload_url) {
 		me.errorChannel.push(userModel.id, 'error', {msg: messages.getByKey('msg_invalid_params')});
+		return;
 	}
-	
-console.log('start upload');
-console.log(data.image);
 
 	fs.stat(imagePath, function(err, stats) {
 		if (!err) {
@@ -38,8 +36,8 @@ console.log(data.image);
 		            "filename": restler.file(imagePath, null, stats.size, null, "image/jpg")
 		        }
 		    }).on("complete", function(data) {
-		    	console.log('complete');
-		        callback();
+		    	console.log(data);
+		        callback(data);
 		    });
 		} else {
 			me.errorChannel.push(userModel.id, 'error', {msg: messages.getByKey('msg_file_not_found')});
