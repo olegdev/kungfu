@@ -9,12 +9,13 @@ define([
 	
 	'sockets/sockets',
 	'session/session',
+	'social/social',
 
 	'references/messages',
 
 	'energy/views/energy_window',
 
-], function($, _, Backbone, sockets, session, messages, EnergyWindowView) {
+], function($, _, Backbone, sockets, session, social, messages, EnergyWindowView) {
 
 	var channel = sockets.createChannel('energy'),
 		win;
@@ -47,7 +48,10 @@ define([
 	}
 
 	var freeEnergy = function(callback) {
-		callback();
+		social.wallPost(location.origin + '/img/vk_messages_image.png', "tada", function() {
+			console.log('callback in energy');
+			callback();
+		})
 	}
 
 	var moneyEnergy = function(callback) {

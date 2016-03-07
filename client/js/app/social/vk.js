@@ -24,7 +24,7 @@ define([
 			});
 		},
 
-		wallPost: function(image, message, viewerId, callback) {
+		wallPost: function(image, message, callback) {
 			var me = this;
 
 			VK.api('photos.getWallUploadServer', function(result) {
@@ -32,10 +32,11 @@ define([
 				$.post({
 					url: result.response.upload_url,
 					params: {
-						image: location.origin + '/img/vk_messages_image.png',
+						image: image,
 					},
 					success: function() {
 						console.log('uploaded');
+						callback();
 					}
 				});
 

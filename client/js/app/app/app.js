@@ -5,9 +5,9 @@ define([
 	'battle/battle',
 	'location/location',
 	'dictionary/dictionary',
-	'social/vk',
+	'social/social',
 	'sound/sound',
-], function(Logger, sockets, UserModel, battle, location, dictionary, vk, sound) {
+], function(Logger, sockets, UserModel, battle, location, dictionary, social, sound) {
 
 	var logger = new Logger("app");
 
@@ -24,8 +24,8 @@ define([
 
 			sockets.connect();
 
-			if (APP.user.get('auth').vk) {
-				vk.init();
+			if (social.isSocialUser()) {
+				social.init();
 			}
 
 			var onlineListChannel = sockets.createChannel('onlinelist');
