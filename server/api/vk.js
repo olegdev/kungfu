@@ -5,6 +5,7 @@ var socketsService = require(SERVICES_PATH + '/sockets');
 var _ = require('underscore');
 var fs = require('fs');
 var restler = require('restler');
+var messages = require(SERVICES_PATH + '/references/messages/messages');
 
 var API = function() {
 	var me = this;
@@ -19,23 +20,32 @@ var API = function() {
 
 API.prototype.cmdUploadWallpostImage = function(userModel, data, callback) {
 	var me = this,
-		imagePath = BASE_PATH + '/client/img/' + data.img;
+		imagePath = BASE_PATH + '/client/img/' + data.image;
 
+	if (!data.image || data.upload_url) {
+		me.errorChannel.push(userModel.id, 'error', {msg: messages.getByKey('msg_invalid_params')});
+	}
+	
 console.log('start upload');
 console.log(data.image);
 
 	fs.stat(imagePath, function(err, stats) {
-	    restler.post(data.upload_url, {
-	        multipart: true,
-	        data: {
-	            "folder_id": "0",
-	            "filename": restler.file(imagePath, null, stats.size, null, "image/jpg")
-	        }
-	    }).on("complete", function(data) {
-	    	console.log('complete');
-	        callback();
-	    });
+		if (!err) {
+		    restler.post(data.upload_url, {
+		        multipart: true,
+		        data: {
+		            "folder_id": "0",
+		            "filename": restler.file(imagePath, null, stats.size, null, "image/jpg")
+		        }
+		    }).on("complete", function(data) {
+		    	console.log('complete');
+		        callback();
+		    });
+		} else {
+			me.errorChannel.push(userModel.id, 'error', {msg: messages.getByKey('msg_file_not_found')});
+		}
 	});
+
 }
 
 // Создает только один экземпляр класса
