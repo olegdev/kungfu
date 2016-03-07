@@ -48,7 +48,7 @@ define([
 	}
 
 	var freeEnergy = function(callback) {
-		social.wallPost(location.origin + '/img/vk_messages_image.png', "tada", function() {
+		social.wallPost('vk_messages_image.jpg', "tada", function() {
 			console.log('callback in energy');
 			callback();
 		})

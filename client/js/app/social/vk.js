@@ -14,6 +14,8 @@ define([
 
 ], function($, _, Backbone, sockets, session, messages) {
 
+	var vkChannel = sockets.createChannel('vk');
+
 	return {
 
 		init: function() {
@@ -28,16 +30,10 @@ define([
 			var me = this;
 
 			VK.api('photos.getWallUploadServer', function(result) {
-				console.log(result);
-				$.post({
-					url: result.response.upload_url,
-					params: {
-						image: image,
-					},
-					success: function() {
-						console.log('uploaded');
-						callback();
-					}
+
+				vkChannel.push('upload_wallpost_image', {upload_url: result.response.upload_url, image: image}, function() {
+					console.log('image uploaded');
+					callback();
 				});
 
 				// me.request({
