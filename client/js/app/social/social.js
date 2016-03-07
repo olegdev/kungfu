@@ -32,7 +32,7 @@ define([
 		},
 
 		wallPost: function(image, message, callback) {
-			socialApi.wallPost.apply(socialApi, attributes);			
+			socialApi.wallPost.apply(socialApi, arguments);			
 		}
 	};
 });
