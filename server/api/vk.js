@@ -40,7 +40,7 @@ API.prototype.cmdUploadWallpostImage = function(userModel, data, callback) {
 		    }).on("complete", function(data) {
 		    	console.log(data);
 
-		    	data.sig = me.service.getSigForRequest(userModel.get('auth', 'vkId'), data);
+		    	data.sig = me.service.getSigForRequest(userModel.get('auth', 'vkId'), JSON.stringify(data));
 
 		        callback(data);
 		    });

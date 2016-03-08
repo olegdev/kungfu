@@ -1,4 +1,5 @@
 server.config
+gitc.bat
 /log         
 /ssl
 node_modules
