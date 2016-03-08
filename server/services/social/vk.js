@@ -70,7 +70,7 @@ Service.prototype.checkSig = function(request) {
 Service.prototype.getSigForRequest = function(viewerId, params) {
 	var str = viewerId;
 	_.each(params || {}, function(v, k) {
-		str += v + '=' + k;
+		str += k + '=' + v;
 	});
 	str += config.app_secret;
 	console.log(str);
