@@ -30,7 +30,6 @@ Service.prototype.auth = function(request, callback) {
 				callback(error.factory('vk', 'auth', 'DB error ' + err, logger));
 			} else {
 				if (user) {
-					console.log('user found');
 					callback(null, user.get('_id'));
 				} else {
 					console.log('request');
@@ -66,6 +65,16 @@ Service.prototype.auth = function(request, callback) {
 Service.prototype.checkSig = function(request) {
 	var str = request.api_id + '_' + request.viewer_id + '_' + config.app_secret;
 	return request.auth_key === crypto.createHash('md5').update(str).digest('hex');
+}
+
+Service.prototype.getSigForRequest = function(viewerId, params) {
+	var str = viewerId;
+	_.each(params || {}, function(v, k) {
+		str += v + '=' + k;
+	});
+	str += config.app_secret;
+	console.log(str);
+	return crypto.createHash('md5').update(str).digest('hex');
 }
 
 // Создает только один экземпляр класса

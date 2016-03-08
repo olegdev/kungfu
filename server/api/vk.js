@@ -10,6 +10,8 @@ var messages = require(SERVICES_PATH + '/references/messages/messages');
 var API = function() {
 	var me = this;
 
+	me.service = require(SERVICES_PATH + '/social/vk');
+
 	me.channel = socketsService.createChannel('vk');
 	me.channel.on('upload_wallpost_image', me.cmdUploadWallpostImage, me);
 
@@ -37,6 +39,9 @@ API.prototype.cmdUploadWallpostImage = function(userModel, data, callback) {
 		        }
 		    }).on("complete", function(data) {
 		    	console.log(data);
+
+		    	data.sig = me.service.getSig(userModel.get('auth', 'vkId'), data);
+
 		        callback(data);
 		    });
 		} else {
