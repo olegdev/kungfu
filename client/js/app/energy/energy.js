@@ -48,7 +48,7 @@ define([
 	}
 
 	var freeEnergy = function(callback) {
-		social.wallPost('vk_messages_image.jpg', 'Новая игра "Словесное Кунг-Фу"!<br/>http://vk.com/app5326976_349201736', function() {
+		social.wallPost('vk_messages_image.jpg', messages.getByKey("vk_wallpost_message"), function() {
 			console.log('callback in energy.');
 			callback();
 		})
