@@ -33,7 +33,7 @@ define([
 					VK.api('photos.saveWallPhoto', resp, function(result) {
 						var photo = result.response[0].id;
 						var params = {
-							message: message, // + ' http://vk.com/app' + config.user.payment_app + '_' + user.get('social').social_net_id + '#msg_id' + getUID(),
+							message: message,
 							attachments: photo,
 							owner_id: APP.user.get('auth').vkId,
 						};
