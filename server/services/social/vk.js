@@ -67,16 +67,6 @@ Service.prototype.checkSig = function(request) {
 	return request.auth_key === crypto.createHash('md5').update(str).digest('hex');
 }
 
-Service.prototype.getSigForRequest = function(viewerId, params) {
-	var str = viewerId;
-	_.each(params || {}, function(v, k) {
-		str += k + '=' + v;
-	});
-	str += config.app_secret;
-	console.log(str);
-	return crypto.createHash('md5').update(str).digest('hex');
-}
-
 // Создает только один экземпляр класса
 Service.getInstance = function() {
     if (!this.instance) {

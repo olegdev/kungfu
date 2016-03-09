@@ -38,11 +38,7 @@ API.prototype.cmdUploadWallpostImage = function(userModel, data, callback) {
 		            "filename": restler.file(imagePath, null, stats.size, null, "image/jpg")
 		        }
 		    }).on("complete", function(data) {
-		    	console.log(data);
-
-		    	data.sig = me.service.getSigForRequest(userModel.get('auth', 'vkId'), JSON.parse(data));
-
-		        callback(data);
+		        callback(JSON.parse(data));
 		    });
 		} else {
 			me.errorChannel.push(userModel.id, 'error', {msg: messages.getByKey('msg_file_not_found')});
