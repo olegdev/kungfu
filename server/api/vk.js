@@ -34,8 +34,7 @@ API.prototype.cmdUploadWallpostImage = function(userModel, data, callback) {
 		    restler.post(data.upload_url, {
 		        multipart: true,
 		        data: {
-		            "folder_id": "0",
-		            "filename": restler.file(imagePath, null, stats.size, null, "image/jpg")
+		            "image": restler.file(imagePath, null, stats.size, null, "image/jpg")
 		        }
 		    }).on("complete", function(data) {
 		        callback(JSON.parse(data));
