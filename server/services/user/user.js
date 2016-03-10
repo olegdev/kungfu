@@ -89,12 +89,11 @@ Service.prototype.findOne = function(criteria, callback) {
 		} else {
 			for(var i = 0; i < users.length; i++) {
 				if (onlineList.list[users[i].id]) {
-					return onlineList.list[users[i].id];
+					callback(null, onlineList.list[users[i].id]);
 				} else {
-					return userModelService.factory(users[i]);
+					callback(null, userModelService.factory(users[i]));
 				}
 			}
-			callback(null, userModel);
 		}
 	});
 }
