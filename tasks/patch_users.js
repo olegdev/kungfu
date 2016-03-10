@@ -23,6 +23,7 @@ module.exports = function(grunt) {
 						users[i].save();
 					}
 				}
+				done(true);
 			} else {
 				done(false);
 			}
