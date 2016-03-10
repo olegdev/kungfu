@@ -51,12 +51,24 @@ define([
 				},
 				push: function(message, data, callback, opts) {
 					opts = opts || {};
+
+					if (callback) {
+						callbackFn = function(data) {
+							if (data && data.user) {
+								APP.user.set(data.user);
+							}
+							callback(data);
+						}
+					} else {
+						callbackFn = function() {}
+					}
+
 					if (opts.delay) {
 						setTimeout(function() {
-							socket.emit('push', {channel: name, message: message, data: data}, callback);
+							socket.emit('push', {channel: name, message: message, data: data}, callbackFn);
 						}, opts.delay);
 					} else {
-						socket.emit('push', {channel: name, message: message, data: data}, callback);
+						socket.emit('push', {channel: name, message: message, data: data}, callbackFn);
 					}
 				}
 			}

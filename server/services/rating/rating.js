@@ -45,6 +45,14 @@ Service.prototype.finishBattle = function(battle, callback) {
 	winUser.addons.counters.incValue('wins');
 	loseUser.addons.counters.incValue('loses');
 
+	// обновляю энергию
+	if (!winUser.get('buffs', 'free_energy')) {
+		winUser.addons.timed.decValue('energy');	
+	}
+	if (!loseUser.get('buffs', 'free_energy')) {
+		loseUser.addons.timed.decValue('energy');
+	}
+
 	// рейтинг
 	pointsWin = me.calcPoints(winUser, loseUser);
 	pointsLose = me.calcPoints(loseUser, winUser);

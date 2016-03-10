@@ -6,26 +6,21 @@ define([
 	'jquery',
 	'underscore',
 	'backbone',
+	'energy/energy',
 	'battle_search/battle_search',
 	'location/views/info',
 	'location/views/controls',
 	'location/views/window',
 	'text!location/templates/main.tpl',
 	'references/messages'
-], function($, _, Backbone, BattleSearch, InfoView, ControlsView, windowView, mainTpl, messages) {
+], function($, _, Backbone, energy, battleSearch, InfoView, ControlsView, windowView, mainTpl, messages) {
 
 	var onFightClick = function() {
-		BattleSearch.search();
-
-		// setTimeout(function() {
-		// 	$('#s1').css({'font-size': '150px', opacity: '0', left: '731px'});
-		// 	setTimeout(function() {
-		// 		$('#s2').css({'font-size': '150px', opacity: '0', left: '731px'});
-		// 	}, 1000);
-
-		// 	$('#viewport').fadeOut();
-		// 	$('#window').fadeOut();
-		// }, 2000);
+		if (APP.user.get('timed').energy[0] < 1 && !APP.user.get('buffs').free_energy) {
+			energy.showWindow({ hint: true });
+		} else {
+			battleSearch.search();
+		}
 	}
 
 	var onRatingClick = function() {

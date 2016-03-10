@@ -20,6 +20,7 @@ var schema = new mongoose.Schema({
 	timed: {
 		energy: Array
 	},
+	buffs: {},
 	rating: {
 		league: Number,
 		points: Number

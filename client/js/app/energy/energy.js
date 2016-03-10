@@ -21,15 +21,16 @@ define([
 		win;
 
 	/** API listeners */
-	channel.on('low_energy', function(data) {
-		onCmdLowEnergy(data);
-	});
+	/** ***** **/
 
 	/*** Показать окно восстановления энергии */
 	var showWindow = function(config) {
 		win = new EnergyWindowView(config || {});
 		win.on('free-energy', function() {
 			freeEnergy(function() {
+				channel.push("free_energy", {}, function() {
+					// update user view
+				});
 				win.close();
 			})
 		});
@@ -40,18 +41,11 @@ define([
 		});
 	}
 
-	// энергия закончилась. показываю уведомление и окно восстановления
-	var onCmdLowEnergy = function(data) {
-		if (win) {
-			//
-		}
-	}
-
 	var freeEnergy = function(callback) {
-		social.wallPost('vk_messages_image.jpg', messages.getByKey("vk_wallpost_message"), function() {
-			console.log('callback in energy.');
-			callback();
-		})
+		// social.wallPost('vk_messages_image.jpg', messages.getByKey("vk_wallpost_message"), function() {
+		// 	callback();
+		// })
+		callback();
 	}
 
 	var moneyEnergy = function(callback) {
@@ -59,8 +53,8 @@ define([
 	}
 
 	return {
-		showWindow: function() {
-			showWindow({hint: true});
+		showWindow: function(config) {
+			showWindow(config);
 		}
 	};
 });

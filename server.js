@@ -24,6 +24,8 @@ var getConfig = require(SERVICES_PATH + '/getconfig/getconfig');
 var dictionary = require(SERVICES_PATH + '/dictionary/dictionary');
 var bots = require(SERVICES_PATH + '/bots/bots');
 var rating = require(SERVICES_PATH + '/rating/rating');
+var timed = require(SERVICES_PATH + '/timed/timed');
+var buffs = require(SERVICES_PATH + '/buffs/buffs');
 var vk = require(SERVICES_PATH + '/social/vk');
 
 //============= Create server ============
@@ -173,7 +175,6 @@ fs.readdirSync(join(BASE_PATH, 'server/api')).forEach(function (file) {
 dictionary.load(function(err) {
 	if (!err) {
 		/****/ logger.info('Dictionary loaded with ' + dictionary.dictionary.words.length + ' words');
-		
 	} else {
 		/****/ logger.error('Dictionary load error');
 	}
@@ -183,7 +184,6 @@ dictionary.load(function(err) {
 bots.load(function(err) {
 	if (!err) {
 		/****/ logger.info('Bots loaded');
-		
 	} else {
 		/****/ logger.error('Bots load error');
 	}
@@ -193,12 +193,28 @@ bots.load(function(err) {
 rating.recalcRating(function(err) {
 	if (!err) {
 		/****/ logger.info('Rating is ready');
-		
 	} else {
 		/****/ logger.error('Rating calculation error');
 	}
 });
 
+// ============ Timed refreshing ===========
+timed.refreshValues(function(err) {
+	if (!err) {
+		/****/ logger.info('Timed was refreshed');
+	} else {
+		/****/ logger.error('Timed refreshing error');
+	}
+});
+
+// ============ Buffs refreshing ===========
+buffs.refreshValues(function(err) {
+	if (!err) {
+		/****/ logger.info('Buffs was refreshed');
+	} else {
+		/****/ logger.error('Buffs refreshing error');
+	}
+});
 
 /****/ logger.info('Node app started on port ' + CONFIG.port);
 /****/ logger.info('Node https app started on port ' + CONFIG.portHttps);

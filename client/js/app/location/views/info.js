@@ -23,6 +23,10 @@ define([
 			'click .add-energy-btn': 'onAddEnergyClick',
 		},
 
+		initialize: function() {
+			this.listenTo(APP.user, "change", this.render);
+		},
+
 		render: function() {
 			this.$el.html(this.template({data: APP.user.attributes, session: session, messages: messages, leagues: leagues, userAvatarView: userAvatarView}));
 			return this;

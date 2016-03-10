@@ -2,8 +2,15 @@
 <table>
 <tr>
 	<td>
-		<%= messages.getByKey("energy") %>:</td><td><%= data.timed.energy[0] %>
-		<div class="add-energy-btn" title="<%= messages.getByKey('add-energy-btn-tip') %>"></div>
+		<%= messages.getByKey("energy") %>:
+	</td>
+	<td>
+		<% if (data.buffs.free_energy) %>
+			<span class="green-text"><%= messages.getByKey('infinity_energy') %></span>
+		<% else { %>
+			<%= parseInt(data.timed.energy[0]) %>/<%= data.timed.energy[1] %> 
+			<div class="add-energy-btn" title="<%= messages.getByKey('add-energy-btn-tip') %>"></div>
+		<% } %>
 	</td>
 </tr>
 <tr><td><%= messages.getByKey("league") %>:</td><td><%= leagues.getNameByIndex(data.rating.league) %></td></tr>

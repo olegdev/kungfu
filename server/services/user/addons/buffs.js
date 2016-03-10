@@ -1,5 +1,5 @@
 /**
- * Восстанавливаемые характеристики
+ * Баффы
  */
 var logger = require(SERVICES_PATH + '/logger/logger')(__filename);
 var error = require(SERVICES_PATH + '/error');
@@ -20,30 +20,37 @@ var Addon = function(model) {
 }
 
 Addon.prototype.init = function() {
-	this.set('energy', [5,5,0.01667]);
+	this.model.set('buffs', {});
 }
 
 Addon.prototype.getConfig = function() {
-	return this.model.get('timed');
+	return this.model.get('buffs');
 }
 
 Addon.prototype.get = function(key) {
 	var me = this,
-		data = me.model.get('timed');
+		data = me.model.get('buffs');
 	return key ? data[key] : data;
 }
 
 Addon.prototype.set = function(key, value) {
 	var me = this,
-		data = me.model.get('timed');
-	data[key] = value;	
-	me.model.set('timed', _.clone(data));
+		data = me.model.get('buffs');
+	if (key) {
+		data[key] = value;	
+	} else {
+		data = value;	
+	}
+	me.model.set('buffs', _.clone(data));
 }
 
-Addon.prototype.decValue = function(key) {
+Addon.prototype.setExpired = function(key, dateOfExpiration) {
 	var me = this,
-		current = me.get(key);
-	me.set(key, [Math.max(current[0]-1, 0), current[1], current[2]]);
+		data = _.clone(me.model.get('buffs'));
+	data[key] = {
+		expired: dateOfExpiration
+	};
+	me.model.set('buffs', data);
 }
 
 module.exports = Service;

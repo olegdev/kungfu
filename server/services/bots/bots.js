@@ -41,6 +41,9 @@ Service.prototype.loadDataFromRef = function(callback) {
 			counters: {
 				wins: 0,
 				loses: 0,
+			},
+			buffs: {
+				free_energy: {},
 			}
 		});
 	}

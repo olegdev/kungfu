@@ -7,17 +7,21 @@ var logger = require(SERVICES_PATH + '/logger/logger')(__filename);
 var error = require(SERVICES_PATH + '/error');
 var mongoose = require("mongoose");
 
-var userModel = require(SERVICES_PATH + '/user/usermodel');
+var userModelService = require(SERVICES_PATH + '/user/usermodel');
 
 var Service = function() {
 	this.safeQueue = {};
 }
 
+/**
+ * Регистрация
+ * @param data {Object} Авторизационные данные и личные данные (имя, картинка)
+ */
 Service.prototype.register = function(data, callback) {
 	var me = this,
 		user;
 
-	user = userModel.factory();
+	user = userModelService.factory();
 	user.set('auth', null, data.auth);
 	user.set('info', null, data.info);
 
@@ -30,16 +34,44 @@ Service.prototype.register = function(data, callback) {
 	});
 }
 
+/**
+ * Поиск по id модели
+ * @return UserModel 
+ */
 Service.prototype.findById = function(uid, callback) {
 	mongoose.model('users').findById(uid, function(err, user) {
 		if (err) {
 			callback(error.factory('user', 'findById', 'DB error ' + err, logger));
 		} else {
 			if (user) {
-				callback(null, userModel.factory(user));
+				callback(null, userModelService.factory(user));
 			} else {
 				callback(null, false);
 			}
+		}
+	});
+}
+
+/**
+ * Поиск нескольких моделей удовлетворяющих некоторому критерию
+ * @param criteria {Object} Критерий поиска
+ * @return UserModel[]
+ */
+Service.prototype.find = function(criteria, callback) {
+	var userModels = [],
+		onlineList = require(SERVICES_PATH + '/onlinelist/onlinelist');
+	mongoose.model('users').find(criteria, function(err, users) {
+		if (err) {
+			callback(error.factory('user', 'find', 'DB error ' + err, logger));
+		} else {
+			for(var i = 0; i < users.length; i++) {
+				if (onlineList.list[users[i].id]) {
+					userModels.push(onlineList.list[users[i].id]);
+				} else {
+					userModels.push(userModelService.factory(users[i]));
+				}
+			}
+			callback(null, userModels);
 		}
 	});
 }
