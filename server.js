@@ -120,6 +120,16 @@ app.get("/vk", function(req, res, next) {
 		}
 	});
 });
+app.get("/vk_order", function(req, res, next) {
+	vk.order(req.query, function(err, data) {
+		if (!err) {
+			res.setHeader('Content-Type', 'application/json');
+    		res.send(JSON.stringify(data));
+		} else {
+			res.status(500).send("Internal server error");	
+		}
+	});
+});
 app.post('/login', function(req, res, next) {
 	auth
 		.auth(req.body.login, req.body.pass, function(err, uid) {

@@ -1,21 +1,10 @@
 /**
  * Справочник ботов
  *
-    id - идентификатор
-    name - имя
-    img - картинка
-    league - лига
-    points - кол-во очков
  */
 var Reference = {};
 var _ = require('underscore');
 
-/**
- * 
- */
-Reference.func = function() {
-	//
-}
 
 // послдение строчки обрабатываются grunt'ом, не менять!
 

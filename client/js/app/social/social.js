@@ -33,6 +33,10 @@ define([
 
 		wallPost: function(image, message, callback) {
 			socialApi.wallPost.apply(socialApi, arguments);			
+		},
+
+		order: function(itemName) {
+			socialApi.order.apply(socialApi, arguments);
 		}
 	};
 });

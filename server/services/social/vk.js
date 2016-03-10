@@ -20,6 +20,7 @@ var Service = function() {
 	});
 }
 
+/*** Авторизация ВК */
 Service.prototype.auth = function(request, callback) {
 	var me = this,
 		user;
@@ -59,6 +60,36 @@ Service.prototype.auth = function(request, callback) {
 		});
 	} else {
 		callback(error.factory('vk', 'auth', 'Request signature is invalid', logger));
+	}
+}
+
+/*** Стол заказов ВК */
+Service.prototype.order = function(request, callback) {
+	var me = this,
+		goodsRef = require(SERVICES_PATH + '/references/goods/goods'),
+		goods;
+
+	if (me.checkSig(request)) {
+		if (request.notification_type == 'get_item') {
+			goods = goodsRef.getInfoByName(request.item);
+			if (goods) {
+				callback(null, {
+					title: goods.title,
+					photo_url: goods.image_url,
+					price: goods.price,
+					expiration: 0, // TODO изменить потом
+				});
+			} else {
+				callback(null, {
+					error: {
+						error_code: 20,
+						error_msg: "Item not found"
+					}
+				});
+			}
+		}
+	} else {
+		callback(error.factory('vk', 'order', 'Request signature is invalid', logger));
 	}
 }
 

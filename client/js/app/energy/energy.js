@@ -48,6 +48,7 @@ define([
 	}
 
 	var moneyEnergy = function(callback) {
+		social.order('free_energy');
 		callback();
 	}
 
