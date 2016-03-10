@@ -30,6 +30,9 @@ module.exports = function(grunt) {
         bots: {
             options: {}
         },
+        patch_users: {
+            options: {}
+        },
         px_to_em: {
             options: {
                 dataFileName: 'px.txt',
