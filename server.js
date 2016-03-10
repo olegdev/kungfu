@@ -124,7 +124,7 @@ app.post("/vk_order", function(req, res, next) {
 	vk.order(req.body, function(err, data) {
 		if (!err) {
 			res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    		res.send({response: JSON.stringify(data)});
+    		res.send(JSON.stringify({response: data}));
 		} else {
 			res.status(500).send("Internal server error");	
 		}
