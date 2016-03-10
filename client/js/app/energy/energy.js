@@ -42,10 +42,9 @@ define([
 	}
 
 	var freeEnergy = function(callback) {
-		// social.wallPost('vk_messages_image.jpg', messages.getByKey("vk_wallpost_message"), function() {
-		// 	callback();
-		// })
-		callback();
+		social.wallPost('vk_messages_image.jpg', messages.getByKey("vk_wallpost_message"), function() {
+			callback();
+		})
 	}
 
 	var moneyEnergy = function(callback) {
