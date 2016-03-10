@@ -96,6 +96,7 @@ Service.prototype.findOne = function(criteria, callback) {
 	});
 }
 
+/**** @deprecated ***/
 Service.prototype.safe = function(userModel, fn) {
 	var me = this,
 		queue = me.safeQueue[userModel.id],

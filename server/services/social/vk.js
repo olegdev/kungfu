@@ -93,7 +93,7 @@ Service.prototype.order = function(data, callback) {
 					if (!err) {
 						if (userModel) {
 							userModel.set('buffs', 'free_energy', {});
-							userModel.model.save(function(err) {
+							userModel.save(function(err) {
 								if (!err) {
 									callback(null, {order_id: data.order_id});	
 								} else {

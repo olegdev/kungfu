@@ -29,6 +29,9 @@ Service.prototype.add = function(uid, callback) {
 		user.findById(uid, function(err, userModel) {
 			if (!err) {
 				if (userModel) {
+					userModel.on('save', function() {
+						me.api.pushUserUpdate(userModel);
+					});
 					me.list[uid] = userModel;
 					callback(null);
 				} else {

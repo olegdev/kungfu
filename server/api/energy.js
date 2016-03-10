@@ -23,9 +23,7 @@ API.prototype.cmdFreeEnergy = function(userModel, data, callback) {
 	var me = this;
 	me.service.freeEnergy(userModel, function(err) {
 		if (!err) {
-			callback({
-				user: userModel.asJson('buffs')
-			});
+			callback();
 		} else {
 			me.errorChannel.push('error', err);
 		}

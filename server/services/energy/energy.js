@@ -16,7 +16,7 @@ Service.prototype.freeEnergy = function(userModel, callback) {
 	var me = this,
 		now = new Date();
 	userModel.addons.buffs.setExpired('free_energy', new Date(now.getTime() + config.free_energy_period*60000));
-	userModel.model.save(function(err) {
+	userModel.save(function(err) {
 		callback(err);
 	});
 }

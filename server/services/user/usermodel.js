@@ -7,6 +7,8 @@ var logger = require(SERVICES_PATH + '/logger/logger')(__filename);
 var error = require(SERVICES_PATH + '/error');
 var mongoose = require("mongoose");
 var fs = require('fs');
+var events = require('events');
+var util = require('util');
 
 var Service = function() {
 	var me = this;
@@ -49,7 +51,10 @@ var UserModel = function(model, addons) {
 	this.id = model.id;
 	this.model = model;
 	this.addons = addons;
+	events.EventEmitter.call(this);
 }
+
+util.inherits(UserModel, events.EventEmitter);
 
 UserModel.prototype.getConfig = function(callback) {
 	var me = this,
@@ -102,6 +107,19 @@ UserModel.prototype.asJson = function(path) {
 	});
 
 	return result;
+}
+
+/*** Сохраняет изменения модели в базе, генерирует событие "save" */
+UserModel.prototype.save = function(callback) {
+	var me = this;
+	me.model.save(function(err) {
+		if (!err) {
+			me.emit('save');
+			callback(null);
+		} else {
+			callback(error.factory('Usermodel', 'save', 'Cannot save user model ' + err, logger));
+		}
+	});
 }
 
 UserModel.prototype.get = function(addonName, key) {

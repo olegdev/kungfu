@@ -42,6 +42,10 @@ define([
 				});
 			}, {single: true});
 
+			onlineListChannel.on('user_update', function(data) {
+				APP.user.set(data);	
+			});
+
 			var errorChannel = sockets.createChannel('error');
 			errorChannel.on('error', function(data) {
 				if (APP.config.debug) {
