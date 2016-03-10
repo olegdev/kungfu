@@ -17,7 +17,7 @@ var Service = function() {
 
 	me.interval = setInterval(function() {
 		me.recalcRating();
-	}, 5*60*1000);
+	}, 1*60*1000);
 
 }
 
@@ -119,7 +119,7 @@ Service.prototype.recalcRating = function(callback) {
 		} else {
 
 			users = _.sortBy(users, function(user) {
-				return user.rating.points;
+				return 10000000 - user.rating.points;
 			});
 
 			rating = []; // рейтинг выстраиваю по лигам

@@ -407,6 +407,50 @@ button {
 	margin: 20px 11px 0 28px;
 }
 
+/*** Окно рейтинга */
+#rating-list {
+	font-size: 12px;
+	text-align: center;
+	height: 469px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+#rating-list li {
+	line-height: 28px;
+	margin-bottom: -5px;
+}
+#rating-list span {
+	display: inline-block;
+	overflow: hidden;
+}
+#rating-list .rating-list-place {
+	width: 50px;
+}
+#rating-list .rating-list-title img {
+	width: 30px;
+	height: 30px;
+	float: left;
+	padding-right: 5px;
+}
+#rating-list .rating-list-title {
+	width: 222px;
+	text-align: left;
+}
+#rating-list .rating-list-header .rating-list-title {
+	text-align: center;
+}
+#rating-list .rating-list-league {
+	width: 100px;
+}
+#rating-list .rating-list-points {
+	width: 50px;
+}
+#rating-list .my-result {
+    background-color: #F7F179;
+    padding: 5px 0 0 0 !important;
+    margin: 0 !important;
+}
+
 #s1,#s2 {
 	font-size: 0px;
 	font-weight: bold;

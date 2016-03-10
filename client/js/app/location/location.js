@@ -7,13 +7,14 @@ define([
 	'underscore',
 	'backbone',
 	'energy/energy',
+	'rating/rating',
 	'battle_search/battle_search',
 	'location/views/info',
 	'location/views/controls',
 	'location/views/window',
 	'text!location/templates/main.tpl',
 	'references/messages'
-], function($, _, Backbone, energy, battleSearch, InfoView, ControlsView, windowView, mainTpl, messages) {
+], function($, _, Backbone, energy, rating, battleSearch, InfoView, ControlsView, windowView, mainTpl, messages) {
 
 	var onFightClick = function() {
 		if (APP.user.get('timed').energy[0] < 1 && !APP.user.get('buffs').free_energy) {
@@ -24,7 +25,7 @@ define([
 	}
 
 	var onRatingClick = function() {
-		//
+		rating.showWindow();
 	}
 
 	var onTournamentClick = function() {

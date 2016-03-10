@@ -27,7 +27,7 @@ define([
 			if (social.isSocialUser()) {
 				social.init();
 			}
-
+			
 			var onlineListChannel = sockets.createChannel('onlinelist');
 			onlineListChannel.on('ready', function(data) {
 				if (APP.user.get('bindings').battle) {
