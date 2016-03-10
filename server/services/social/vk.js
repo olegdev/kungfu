@@ -7,7 +7,7 @@ var logger = require(SERVICES_PATH + '/logger/logger')(__filename);
 var error = require(SERVICES_PATH + '/error');
 var mongoose = require('mongoose');
 var _ = require('underscore');
-var crypto = require('crypto');
+var md5 = require('md5');
 var VKSDK = require('vksdk');
 
 var userService = require(SERVICES_PATH + '/user/user');
@@ -118,7 +118,7 @@ Service.prototype.order = function(data, callback) {
 
 Service.prototype.checkAuthKey = function(request) {
 	var str = request.api_id + '_' + request.viewer_id + '_' + config.app_secret;
-	return request.auth_key === crypto.createHash('md5').update(str).digest('hex');
+	return request.auth_key === md5(str);
 }
 
 Service.prototype.checkSig = function(data) {
@@ -137,7 +137,7 @@ Service.prototype.checkSig = function(data) {
 		}
 	}
 	str += config.app_secret;
-	return data.sig === crypto.createHash('md5').update(str).digest('hex');
+	return data.sig === md5(str);
 }
 
 // Создает только один экземпляр класса
