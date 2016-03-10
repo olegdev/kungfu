@@ -83,16 +83,14 @@ Service.prototype.find = function(criteria, callback) {
  */
 Service.prototype.findOne = function(criteria, callback) {
 	var onlineList = require(SERVICES_PATH + '/onlinelist/onlinelist');
-	mongoose.model('users').findOne(criteria, function(err, users) {
+	mongoose.model('users').findOne(criteria, function(err, user) {
 		if (err) {
 			callback(error.factory('user', 'find', 'DB error ' + err, logger));
 		} else {
-			for(var i = 0; i < users.length; i++) {
-				if (onlineList.list[users[i].id]) {
-					callback(null, onlineList.list[users[i].id]);
-				} else {
-					callback(null, userModelService.factory(users[i]));
-				}
+			if (onlineList.list[user.id]) {
+				callback(null, onlineList.list[user.id]);
+			} else {
+				callback(null, userModelService.factory(user));
 			}
 		}
 	});
