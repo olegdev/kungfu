@@ -87,6 +87,29 @@ Service.prototype.order = function(data, callback) {
 					}
 				});
 			}
+		} else if (data.notification_type == 'order_status_change' || data.notification_type == 'order_status_change_test') {
+			if (data.status == 'chargeable') {
+				userService.findOne({'auth.vkId': data.user_id}, function(err, userModel) {
+					if (!err) {
+						if (userModel) {
+							userModel.set('buffs', 'free_energy', {});
+							userModel.model.save(function(err) {
+								if (!err) {
+									callback(null, {order_id: data.order_id});	
+								} else {
+									callback(error.factory('vk', 'order', 'Cannot finish order - DB error ' + err, logger));				
+								}
+							});
+						} else {
+							callback(error.factory('vk', 'order', 'Cannot finish order - user not found', logger));				
+						}
+					} else {
+						callback(error.factory('vk', 'order', 'Cannot find user - DB error ' + err, logger));				
+					}
+				});
+			} else {
+				callback(error.factory('vk', 'order', 'Unknown order status', logger));				
+			}
 		}
 	} else {
 		callback(error.factory('vk', 'order', 'Request signature is invalid', logger));

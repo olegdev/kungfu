@@ -76,6 +76,29 @@ Service.prototype.find = function(criteria, callback) {
 	});
 }
 
+/**
+ * Поиск модели удовлетворяющей некоторому критерию
+ * @param criteria {Object} Критерий поиска
+ * @return UserModel[]
+ */
+Service.prototype.findOne = function(criteria, callback) {
+	var onlineList = require(SERVICES_PATH + '/onlinelist/onlinelist');
+	mongoose.model('users').findOne(criteria, function(err, users) {
+		if (err) {
+			callback(error.factory('user', 'find', 'DB error ' + err, logger));
+		} else {
+			for(var i = 0; i < users.length; i++) {
+				if (onlineList.list[users[i].id]) {
+					return onlineList.list[users[i].id];
+				} else {
+					return userModelService.factory(users[i]);
+				}
+			}
+			callback(null, userModel);
+		}
+	});
+}
+
 Service.prototype.safe = function(userModel, fn) {
 	var me = this,
 		queue = me.safeQueue[userModel.id],
