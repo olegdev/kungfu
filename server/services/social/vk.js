@@ -25,7 +25,7 @@ Service.prototype.auth = function(request, callback) {
 	var me = this,
 		user;
 
-	if (me.checkSig(request)) {
+	if (me.checkAuthKey(request)) {
 		mongoose.model('users').findOne({'auth.vkId': request.viewer_id}, function(err, user) {
 			if (err) {
 				callback(error.factory('vk', 'auth', 'DB error ' + err, logger));
@@ -59,19 +59,19 @@ Service.prototype.auth = function(request, callback) {
 			}
 		});
 	} else {
-		callback(error.factory('vk', 'auth', 'Request signature is invalid', logger));
+		callback(error.factory('vk', 'auth', 'Request auth key is invalid', logger));
 	}
 }
 
 /*** Стол заказов ВК */
-Service.prototype.order = function(request, callback) {
+Service.prototype.order = function(data, callback) {
 	var me = this,
 		goodsRef = require(SERVICES_PATH + '/references/goods/goods'),
 		goods;
 
-	if (me.checkSig(request)) {
-		if (request.notification_type == 'get_item' || request.notification_type == 'get_item_test') {
-			goods = goodsRef.getInfoByName(request.item);
+	if (me.checkSig(data)) {
+		if (data.notification_type == 'get_item' || data.notification_type == 'get_item_test') {
+			goods = goodsRef.getInfoByName(data.item);
 			if (goods) {
 				callback(null, {
 					title: goods.title,
@@ -93,9 +93,28 @@ Service.prototype.order = function(request, callback) {
 	}
 }
 
-Service.prototype.checkSig = function(request) {
+Service.prototype.checkAuthKey = function(request) {
 	var str = request.api_id + '_' + request.viewer_id + '_' + config.app_secret;
 	return request.auth_key === crypto.createHash('md5').update(str).digest('hex');
+}
+
+Service.prototype.checkSig = function(data) {
+	var keys = Object.keys(data),
+		str = "";
+	keys.sort(function(v1,v2) {
+		if (v1 > v2) {
+			return 1;
+		} else {
+			return -1;
+		}
+	});
+	for(var i = 0; i < keys.length; i++) {
+		if (keys[i] != 'sig') {
+			str += keys[i] + '=' + data[keys[i]];
+		}
+	}
+	str += config.app_secret;
+	return data.sig === crypto.createHash('md5').update(str).digest('hex');
 }
 
 // Создает только один экземпляр класса
