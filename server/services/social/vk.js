@@ -70,7 +70,7 @@ Service.prototype.order = function(request, callback) {
 		goods;
 
 	if (me.checkSig(request)) {
-		if (request.notification_type == 'get_item') {
+		if (request.notification_type == 'get_item' || request.notification_type == 'get_item_test') {
 			goods = goodsRef.getInfoByName(request.item);
 			if (goods) {
 				callback(null, {

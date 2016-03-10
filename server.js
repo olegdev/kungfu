@@ -120,8 +120,8 @@ app.get("/vk", function(req, res, next) {
 		}
 	});
 });
-app.get("/vk_order", function(req, res, next) {
-	vk.order(req.query, function(err, data) {
+app.post("/vk_order", function(req, res, next) {
+	vk.order(req.body, function(err, data) {
 		if (!err) {
 			res.setHeader('Content-Type', 'application/json');
     		res.send(JSON.stringify(data));
