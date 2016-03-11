@@ -47,6 +47,13 @@ define([
 					});
 				});
 			});
-		}
+		},
+
+		order: function(itemName) {
+			 VK.callMethod('showOrderBox', {
+			 	type: 'item',
+			 	item: itemName,
+			 });
+ 		}
 	};
 });
