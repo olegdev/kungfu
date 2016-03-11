@@ -20,7 +20,7 @@ var schema = new mongoose.Schema({
 	timed: {
 		energy: Array
 	},
-	buffs: {},
+	buffs: { type: Object, default: {} },
 	rating: {
 		league: Number,
 		points: Number

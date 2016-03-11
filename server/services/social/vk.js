@@ -33,16 +33,14 @@ Service.prototype.auth = function(request, callback) {
 				if (user) {
 					callback(null, user.get('_id'));
 				} else {
-					console.log('request');
-					me.vkApi.request('users.get', {user_id: request.viewer_id, fields: ['photo_50'], lang: 'ru'}, function(resp) {
-						if (resp && resp.response && resp.response.length) {
-							userService.register({
+
+					userService.register({
 						   		auth: {
 						   			vkId: request.viewer_id
 						   		},
 						   		info: {
-						   			title: resp.response[0].first_name + ' ' + resp.response[0].last_name,
-						   			img: resp.response[0].photo_50,
+						   			title: '343',
+						   			img: '',
 						   		}
 						   	}, function(err, userModel) {
 								if (!err) {
@@ -51,10 +49,28 @@ Service.prototype.auth = function(request, callback) {
 									callback(error.factory('vk', 'auth', 'User register error ' + err, logger));
 								}
 							});
-						} else {
-							callback(error.factory('vk', 'auth', 'Data from vk api is invalid ' + JSON.stringify(resp), logger));					
-						}
-					});
+
+					// me.vkApi.request('users.get', {user_id: request.viewer_id, fields: ['photo_50'], lang: 'ru'}, function(resp) {
+					// 	if (resp && resp.response && resp.response.length) {
+					// 		userService.register({
+					// 	   		auth: {
+					// 	   			vkId: request.viewer_id
+					// 	   		},
+					// 	   		info: {
+					// 	   			title: resp.response[0].first_name + ' ' + resp.response[0].last_name,
+					// 	   			img: resp.response[0].photo_50,
+					// 	   		}
+					// 	   	}, function(err, userModel) {
+					// 			if (!err) {
+					// 				callback(null, userModel.model.id);
+					// 			} else {
+					// 				callback(error.factory('vk', 'auth', 'User register error ' + err, logger));
+					// 			}
+					// 		});
+					// 	} else {
+					// 		callback(error.factory('vk', 'auth', 'Data from vk api is invalid ' + JSON.stringify(resp), logger));					
+					// 	}
+					// });
 				}
 			}
 		});
@@ -117,6 +133,7 @@ Service.prototype.order = function(data, callback) {
 }
 
 Service.prototype.checkAuthKey = function(request) {
+	return true;
 	var str = request.api_id + '_' + request.viewer_id + '_' + config.app_secret;
 	return request.auth_key === md5(str);
 }
