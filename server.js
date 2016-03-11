@@ -26,6 +26,7 @@ var bots = require(SERVICES_PATH + '/bots/bots');
 var rating = require(SERVICES_PATH + '/rating/rating');
 var timed = require(SERVICES_PATH + '/timed/timed');
 var buffs = require(SERVICES_PATH + '/buffs/buffs');
+var gameInfo = require(SERVICES_PATH + '/gameinfo/gameinfo');
 var vk = require(SERVICES_PATH + '/social/vk');
 
 //============= Create server ============
@@ -144,6 +145,10 @@ app.post('/login', function(req, res, next) {
 				res.status(500).send("Internal server error");	
 			}
 		});
+});
+app.get("/info", function(req, res, next) {
+	app.locals.info = gameInfo.getInfo();
+	res.render('info');
 });
 
 var server = app.listen(CONFIG.port);

@@ -35,13 +35,13 @@ Addon.prototype.get = function(key) {
 
 Addon.prototype.set = function(key, value) {
 	var me = this,
-		data = me.model.get('buffs');
+		data = _.clone(me.model.get('buffs'));
 	if (key) {
 		data[key] = value;	
 	} else {
 		data = value;	
 	}
-	me.model.set('buffs', _.clone(data));
+	me.model.set('buffs', data);
 }
 
 Addon.prototype.setExpired = function(key, dateOfExpiration) {
