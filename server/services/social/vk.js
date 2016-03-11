@@ -91,7 +91,7 @@ Service.prototype.order = function(data, callback) {
 				userService.findOne({'auth.vkId': data.user_id}, function(err, userModel) {
 					if (!err) {
 						if (userModel) {
-							userModel.set('buffs', 'free_energy', {});
+							userModel.set('buffs', 'free_energy', {expired: false});
 							userModel.save(function(err) {
 								if (!err) {
 									callback(null, {order_id: data.order_id});	
