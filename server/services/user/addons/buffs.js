@@ -20,7 +20,7 @@ var Addon = function(model) {
 }
 
 Addon.prototype.init = function() {
-	this.model.set('buffs', {});
+	this.set('buffs', {});
 }
 
 Addon.prototype.getConfig = function() {
