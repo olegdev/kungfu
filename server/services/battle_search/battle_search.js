@@ -72,7 +72,7 @@ Service.prototype.startBotIjectMonitor = function() {
 				me.startBotIjectMonitor();
 			}
 		}
-	}, _.random(2,5) * 1000);
+	}, _.random(7, 12) * 1000);
 }
 
 Service.prototype.stopBotInjectMonitor = function() {

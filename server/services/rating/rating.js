@@ -128,7 +128,9 @@ Service.prototype.recalcRating = function(callback) {
 			}
 
 			for(var i = 0; i < users.length; i++) {
-				rating[users[i].rating.league].push(users[i]); 
+				if (!users[i].get('botId')) {
+					rating[users[i].rating.league].push(users[i]); 
+				}
 			}
 
 			me.rating = rating;
