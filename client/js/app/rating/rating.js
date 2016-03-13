@@ -32,7 +32,7 @@ define([
 				if (v1.rating.league != v2.rating.league) {
 					return v2.rating.league - v1.rating.league;
 				} else {
-					return v2.place - v1.place;
+					return v1.place - v2.place;
 				}
 			});
 
