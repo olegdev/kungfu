@@ -76,7 +76,7 @@ Service.prototype.order = function(data, callback) {
 					title: goods.title,
 					photo_url: goods.image_url,
 					price: goods.price,
-					expiration: 0, // TODO изменить потом
+					expiration: 900000,
 				});
 			} else {
 				callback(null, {

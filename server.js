@@ -154,7 +154,12 @@ app.get("/info", function(req, res, next) {
 var server = app.listen(CONFIG.port);
 var serverHttps = https.createServer({
       key: fs.readFileSync('./ssl/private'),
-      cert: fs.readFileSync('./ssl/certificate')
+      cert: fs.readFileSync('./ssl/certificate'),
+      ca: [
+      	fs.readFileSync('./ssl/root_cert'),
+      	fs.readFileSync('./ssl/intermediate_cert'),
+      	fs.readFileSync('./ssl/cert_request')
+      ]
     }, app).listen(CONFIG.portHttps);
 
 // ============ Socket IO =========
