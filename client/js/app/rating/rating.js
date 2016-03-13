@@ -29,10 +29,10 @@ define([
 		config = config || {};
 		channel.push('get_rating', {}, function(data) {
 			data.sort(function(v1,v2) {
-				if (v1.rating.league == v2.rating.league) {
-					return v2.rating.place - v1.rating.place;
-				} else {
+				if (v1.rating.league != v2.rating.league) {
 					return v2.rating.league - v1.rating.league;
+				} else {
+					return v2.rating.place - v1.rating.place;
 				}
 			});
 
