@@ -37,7 +37,7 @@ Service.prototype.auth = function(request, callback) {
 					callback(null, user.get('_id'));
 				} else {
 					/****/ logger.info("vk api request");
-					me.vkApi.request('users.get', {user_id: request.viewer_id, fields: ['photo_50'], lang: 'ru'}, function(resp) {
+					me.vkApi.request('users.get', {user_id: request.user_id, fields: ['photo_50'], lang: 'ru'}, function(resp) {
 
 						/****/ logger.info("vk api resp");
 
