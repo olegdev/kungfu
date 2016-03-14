@@ -28,7 +28,7 @@ Service.prototype.auth = function(request, callback) {
 	/****/ logger.info("check signature");
 	if (me.checkAuthKey(request)) {
 		/****/ logger.info("find one by vkID");
-		mongoose.model('users').findOne({'auth.vkId': request.viewer_id}, function(err, user) {
+		mongoose.model('users').findOne({'auth.vkId': request.user_id}, function(err, user) {
 			if (err) {
 				callback(error.factory('vk', 'auth', 'DB error ' + err, logger));
 			} else {
@@ -47,7 +47,7 @@ Service.prototype.auth = function(request, callback) {
 
 							userService.register({
 						   		auth: {
-						   			vkId: request.viewer_id
+						   			vkId: request.user_id
 						   		},
 						   		info: {
 						   			title: resp.response[0].first_name + ' ' + resp.response[0].last_name,

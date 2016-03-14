@@ -426,6 +426,24 @@ button {
 #rating-list .rating-list-place {
 	width: 40px;
 }
+#rating-list .rating-list-online {
+	background-repeat: no-repeat;
+	width: 13px;
+    height: 13px;
+    background-image: url(../img/online_icon.png);
+    position: relative;
+    top: -7px;
+    margin: 0 7px 0 0;
+}
+#rating-list .rating-list-header .rating-list-online {
+	background: none;
+}
+#rating-list .rating-list-online.online {
+    background-position: -13px -13px;
+}
+#rating-list .rating-list-online.offline {
+    background-position: 0 0;
+}
 #rating-list .rating-list-title img {
 	width: 30px;
 	height: 30px;
@@ -433,11 +451,13 @@ button {
 	padding-right: 5px;
 }
 #rating-list .rating-list-title {
-	width: 222px;
+	width: 200px;
+	height: 30px;
 	text-align: left;
 }
 #rating-list .rating-list-header .rating-list-title {
 	text-align: center;
+	height: auto;
 }
 #rating-list .rating-list-league {
 	width: 100px;

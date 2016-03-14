@@ -4,6 +4,7 @@
 var _ = require('underscore');
 
 var socketsService = require(SERVICES_PATH + '/sockets');
+var onlineListService = require(SERVICES_PATH + '/onlinelist/onlinelist');
 
 var API = function() {
 	var me = this;
@@ -28,6 +29,7 @@ API.prototype.cmdGetRating = function(userModel, params, callback) {
 				info: u.get('info'),
 				rating: u.get('rating'),
 				place: i,
+				online: onlineListService.list[u.id] ? true : false,
 			});
 		});
 	});
