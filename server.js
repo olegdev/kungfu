@@ -108,7 +108,9 @@ app.get("/login", function(req, res, next) {
 	}
 });
 app.get("/vk", function(req, res, next) {
+	/****/ logger.info('User auth ' + JSON.stringify(req.query));
 	vk.auth(req.query, function(err, uid) {
+		/****/ logger.info('User auth success ' + uid);
 		if (!err) {
 			if (uid) {
 				req.session.uid = uid;

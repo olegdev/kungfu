@@ -25,16 +25,26 @@ Service.prototype.auth = function(request, callback) {
 	var me = this,
 		user;
 
+	/****/ logger.info("check signature");
 	if (me.checkAuthKey(request)) {
+		/****/ logger.info("find one by vkID");
 		mongoose.model('users').findOne({'auth.vkId': request.viewer_id}, function(err, user) {
 			if (err) {
 				callback(error.factory('vk', 'auth', 'DB error ' + err, logger));
 			} else {
 				if (user) {
+					/****/ logger.info("user found");
 					callback(null, user.get('_id'));
 				} else {
+					/****/ logger.info("vk api request");
 					me.vkApi.request('users.get', {user_id: request.viewer_id, fields: ['photo_50'], lang: 'ru'}, function(resp) {
+
+						/****/ logger.info("vk api resp");
+
 						if (resp && resp.response && resp.response.length) {
+
+							/****/ logger.info("register new one");
+
 							userService.register({
 						   		auth: {
 						   			vkId: request.viewer_id
@@ -45,8 +55,10 @@ Service.prototype.auth = function(request, callback) {
 						   		}
 						   	}, function(err, userModel) {
 								if (!err) {
+									/****/ logger.info("success");
 									callback(null, userModel.model.id);
 								} else {
+									/****/ logger.info("reg error");
 									callback(error.factory('vk', 'auth', 'User register error ' + err, logger));
 								}
 							});
