@@ -28,7 +28,7 @@ Service.prototype.auth = function(request, callback) {
 	/****/ logger.info("check signature");
 	if (me.checkAuthKey(request)) {
 		/****/ logger.info("find one by vkID");
-		mongoose.model('users').findOne({'auth.vkId': request.user_id}, function(err, user) {
+		mongoose.model('users').findOne({'auth.vkId': request.viewer_id}, function(err, user) {
 			if (err) {
 				callback(error.factory('vk', 'auth', 'DB error ' + err, logger));
 			} else {
@@ -37,7 +37,10 @@ Service.prototype.auth = function(request, callback) {
 					callback(null, user.get('_id'));
 				} else {
 					/****/ logger.info("vk api request");
-					me.vkApi.request('users.get', {user_id: request.user_id, fields: ['photo_50'], lang: 'ru'}, function(resp) {
+					/****/ logger.info("vk api viewer_id", request.viewer_id);
+					/****/ logger.info("vk api user_id", request.user_id);
+
+					me.vkApi.request('users.get', {user_id: request.viewer_id, fields: ['photo_50'], lang: 'ru'}, function(resp) {
 
 						/****/ logger.info("vk api resp");
 
@@ -47,7 +50,7 @@ Service.prototype.auth = function(request, callback) {
 
 							userService.register({
 						   		auth: {
-						   			vkId: request.user_id
+						   			vkId: request.viewer_id
 						   		},
 						   		info: {
 						   			title: resp.response[0].first_name + ' ' + resp.response[0].last_name,
