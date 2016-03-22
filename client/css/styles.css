@@ -1,4 +1,4 @@
-@font-face {
+﻿@font-face {
 	font-family: tin;
 	src: url("fonts/inglobal.ttf") format("opentype");
 }
@@ -437,6 +437,7 @@ button {
 }
 #rating-list .rating-list-header .rating-list-online {
 	background: none;
+	display: none;
 }
 #rating-list .rating-list-online.online {
     background-position: -13px -13px;
