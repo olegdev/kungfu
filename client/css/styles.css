@@ -434,10 +434,10 @@ button {
     position: relative;
     top: -7px;
     margin: 0 7px 0 0;
+    display: none;
 }
 #rating-list .rating-list-header .rating-list-online {
 	background: none;
-	display: none;
 }
 #rating-list .rating-list-online.online {
     background-position: -13px -13px;
