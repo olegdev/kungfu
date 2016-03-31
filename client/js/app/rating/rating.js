@@ -29,14 +29,19 @@ define([
 		config = config || {};
 		channel.push('get_rating', {}, function(data) {
 			data.sort(function(v1,v2) {
-				if (v1.online == v2.online) {
-					if (v1.rating.league != v2.rating.league) {
-						return v2.rating.league - v1.rating.league;
-					} else {
-						return v1.place - v2.place;
-					}
+				// if (v1.online == v2.online) {
+				// 	if (v1.rating.league != v2.rating.league) {
+				// 		return v2.rating.league - v1.rating.league;
+				// 	} else {
+				// 		return v1.place - v2.place;
+				// 	}
+				// } else {
+				// 	return v1.online ? -1 : 1;
+				// }
+				if (v1.rating.league != v2.rating.league) {
+					return v2.rating.league - v1.rating.league;
 				} else {
-					return v1.online ? -1 : 1;
+					return v1.place - v2.place;
 				}
 			});
 
