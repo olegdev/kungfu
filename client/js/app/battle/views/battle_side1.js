@@ -8,11 +8,11 @@ define([
 	'battle/views/word',
 	'text!battle/templates/side1.tpl',
 	'references/messages',
-], function($, _, Backbone, BackboneSide2View, WordView, tpl, messages) {
+], function($, _, Backbone, BattleSide2View, WordView, tpl, messages) {
 
-	var View = BackboneSide2View.extend({
+	var View = BattleSide2View.extend({
 
-		defaultAngleOfLettersRotation: 0,
+		className: 'field field-my',
 		template: _.template(tpl),
 
 		events: {
@@ -22,10 +22,10 @@ define([
 		render: function() {
 			var me = this;
 
-			BackboneSide2View.prototype.render.apply(this, arguments);
+			BattleSide2View.prototype.render.apply(this, arguments);
 
 			this.wordView = new WordView({
-				letters: this.config.letters,
+				letters: this.letters,
 			});
 			this.wordView.on('submit', _.bind(this.onWordSubmit, this));
 			this.wordView.on('clear', _.bind(this.onWordClear, this));
@@ -69,90 +69,103 @@ define([
 			this.$el.find('.selected').removeClass('selected');
 		},
 
-		/**** Анимация источника */
-		showSourceHit: function(data, callback) {
+		setLetters: function(letters) {
+			BattleSide2View.prototype.setLetters.apply(this, arguments);
+			this.wordView.letters = this.letters;
+		},
+
+		placeLetter: function(letter, isNew) {
 			var me = this;
-
-			// смещаю буквы на своем поле
-			_.each(me.config.letters, function(value) {
-				if (data.src[value.id] && data.src[value.id].row != value.row) {
-					me.$el.find('.letter[data-id="'+ value.id +'"]').css('top', ((me.config.fieldSize.rows-1-data.src[value.id].row) * me.cellHeight) + 'px');
-				}
-			});
-
-			// показываю новые буквы
-			setTimeout(function() {
-				_.each(data.src, function(value) {
-					if (!me.config.letters[value.id]) {
-						var el = $('<div class="letter">'+ value.letter +'</div>');
-						el.attr('data-id', value.id);
-						el.css({
-							top: ((me.config.fieldSize.rows-1-data.src[value.id].row) * me.cellHeight) +'px',
-							left: (value.column * me.cellWidth) + 'px',
-							display: 'none',
-						});
-						me.$el.find('.field-inner').append(el);
-						el.fadeIn();
-					}
+			if (isNew) {
+				el = $('<div class="letter">'+ letter.letter +'</div>');
+				el.attr('data-id', letter.id);
+				el.css({
+					top: ((me.fieldSize.rows-1-letter.row) * me.cellHeight) +'px',
+					left: (letter.column * me.cellWidth) + 'px',
+					display: 'none',
 				});
-
-				me.config.letters = data.src;
-				me.wordView.config.letters = me.config.letters;
-
-			}, 200);
-
-			// пауза и удаляю все буквы удара и вызываю коллбек
-			setTimeout(function() {
-				me.$el.find('.src-anim').remove();
-			}, 2000);
-
-			callback();
-
+				me.$el.find('.field-inner').append(el);
+				el.fadeIn();
+			} else {
+				el = me.$el.find('.letter[data-id="'+ letter.id +'"]');
+				el.css('top', ((me.fieldSize.rows-1-letter.row) * me.cellHeight) + 'px');
+			}
 		},
 
-		/**** Анимация приёмника */
-		showDestHit: function(data, callback) {
-			var me = this;
+		// /**** Анимация источника */
+		// showSourceHit: function(data, callback) {
+		// 	var me = this;
 
-			// нахожу буквы удара и располагаю их за полем, и затем смещаю в ячейки
-			_.each(data.dest, function(value) {
-				if (!me.config.letters[value.id]) {
-					var el = $('<div class="letter dest-anim">'+ value.letter +'</div>');
-					el.attr('data-id', value.id);
-					el.css({
-						left: (value.column * me.cellWidth) + 'px',
-					});
-					me.$el.find('.field-inner').append(el);
-					(function(el,value) {
-						setTimeout(function() {
-							el.css('top', ((me.config.fieldSize.rows-1-data.dest[value.id].row) * me.cellHeight) + 'px');
+		// 	// смещаю буквы на своем поле
+		// 	_.each(me.config.letters, function(value) {
+		// 		if (data.src[value.id] && data.src[value.id].row != value.row) {
+		// 			me.$el.find('.letter[data-id="'+ value.id +'"]').css('top', ((me.config.fieldSize.rows-1-data.src[value.id].row) * me.cellHeight) + 'px');
+		// 		}
+		// 	});
 
-							// скидываю цвет
-							setTimeout(function() {
-								el.removeClass('dest-anim');
-							}, 900);
+		// 	// показываю новые буквы
+		// 	setTimeout(function() {
+		// 		_.each(data.src, function(value) {
+		// 			if (!me.config.letters[value.id]) {
+		// 				var el = $('<div class="letter">'+ value.letter +'</div>');
+		// 				el.attr('data-id', value.id);
+		// 				el.css({
+		// 					top: ((me.config.fieldSize.rows-1-data.src[value.id].row) * me.cellHeight) +'px',
+		// 					left: (value.column * me.cellWidth) + 'px',
+		// 					display: 'none',
+		// 				});
+		// 				me.$el.find('.field-inner').append(el);
+		// 				el.fadeIn();
+		// 			}
+		// 		});
 
-						},200);
-					}(el,value));
-				}
-			});
+		// 		me.config.letters = data.src;
+		// 		me.wordView.config.letters = me.config.letters;
 
-			me.config.letters = data.dest;
-			me.wordView.config.letters = me.config.letters;
+		// 	}, 200);
 
-			callback();
-		},
+		// 	// пауза и удаляю все буквы удара и вызываю коллбек
+		// 	setTimeout(function() {
+		// 		me.$el.find('.src-anim').remove();
+		// 	}, 2000);
 
-		unsmashLetters: function() {
-			var me = this;
-			_.each(me.config.letters, function(value) {
-				me.$el.find('.letter[data-id="'+ value.id +'"]').css({
-					top: ((me.config.fieldSize.rows-1-value.row) * me.cellHeight),
-					left: value.column * me.cellWidth,
-					transform: 'rotate('+ me.defaultAngleOfLettersRotation +'deg)',
-				});
-			});
-		},
+		// 	callback();
+
+		// },
+
+		// /**** Анимация приёмника */
+		// showDestHit: function(data, callback) {
+		// 	var me = this;
+
+		// 	// нахожу буквы удара и располагаю их за полем, и затем смещаю в ячейки
+		// 	_.each(data.dest, function(value) {
+		// 		if (!me.config.letters[value.id]) {
+		// 			var el = $('<div class="letter dest-anim">'+ value.letter +'</div>');
+		// 			el.attr('data-id', value.id);
+		// 			el.css({
+		// 				left: (value.column * me.cellWidth) + 'px',
+		// 			});
+		// 			me.$el.find('.field-inner').append(el);
+		// 			(function(el,value) {
+		// 				setTimeout(function() {
+		// 					el.css('top', ((me.config.fieldSize.rows-1-data.dest[value.id].row) * me.cellHeight) + 'px');
+
+		// 					// скидываю цвет
+		// 					setTimeout(function() {
+		// 						el.removeClass('dest-anim');
+		// 					}, 900);
+
+		// 				},200);
+		// 			}(el,value));
+		// 		}
+		// 	});
+
+		// 	me.config.letters = data.dest;
+		// 	me.wordView.config.letters = me.config.letters;
+
+		// 	callback();
+		// },
+
 
 	});
 

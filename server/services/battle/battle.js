@@ -30,27 +30,18 @@ Service.prototype.createBattle = function(userModel, userModel2) {
 	userModel.set('bindings', 'battle', battle.id);
 	userModel2.set('bindings', 'battle', battle.id);
 
-	me.api.pushStart(userModel, {battle: me.battleAsJson(battle.id)});
-	me.api.pushStart(userModel2, {battle: me.battleAsJson(battle.id)});
+	battle.on('round', _.bind(me.onBattleRound, me));
+	battle.on('finish', _.bind(me.onBattleFinish, me));
+
+	me.api.pushStart(userModel, {battle: battle.asJson()});
+	me.api.pushStart(userModel2, {battle: battle.asJson()});
 }
 
-Service.prototype.battleAsJson = function(battleId) {
-	var me = this,
-		battle = me.battles[battleId];
-	if (battle) {
-		return battle.asJson();
-	} else {
-		return {};
-	}
-}
-
-Service.prototype.onWord = function(userModel, data, callback) {
+Service.prototype.onHit = function(userModel, data, callback) {
 	var me = this,
 		battleId = userModel.get('bindings', 'battle'),
 		battle = me.battles[battleId],
-		side1, side2,
-		hit, result,
-		word = '',
+		side, word = '',
 
 		innerCompactAndGetColumns = function(letters) {
 			var columns = [];
@@ -86,14 +77,14 @@ Service.prototype.onWord = function(userModel, data, callback) {
 			// генерирую случайную букву, если в первых двух строках свободное место
 			for(var i = 0; i < battle.fieldSize.columns; i++) {
 				if (columns[i].length == 0) {
-					id = battle.genLocalId('ltr');
+					id = battle._genLocalId('ltr');
 					letters[id] = {
 						id: id,
 						row: 0,
 						column: i,
 						letter: dictionary.generateLetter(letters, 0),
 					};
-					id = battle.genLocalId('ltr');
+					id = battle._genLocalId('ltr');
 					letters[id] = {
 						id: id,
 						row: 1,
@@ -101,7 +92,7 @@ Service.prototype.onWord = function(userModel, data, callback) {
 						letter: dictionary.generateLetter(letters, 1),
 					};
 				} else if (columns[i].length == 1) {
-					id = battle.genLocalId('ltr');
+					id = battle._genLocalId('ltr');
 					letters[id] = {
 						id: id,
 						row: 1,
@@ -134,7 +125,7 @@ Service.prototype.onWord = function(userModel, data, callback) {
 
 			while(freeCells.length && index < word.length) {
 				var cell = freeCells[_.random(0, freeCells.length-1)];
-				id = battle.genLocalId('ltr');
+				id = battle._genLocalId('ltr');
 				letters[id] = {
 					id: id,
 					row: cell.row,
@@ -154,7 +145,7 @@ Service.prototype.onWord = function(userModel, data, callback) {
 			for(var i = 0; i < Math.min(word.length,6); i++) {
 				var id = columns[i][columns[i].length-1].id;
 				var tmp = letters[id];
-				var newId = battle.genLocalId('ltr');
+				var newId = battle._genLocalId('ltr');
 				letters[newId] = {
 					id: newId,
 					row: tmp.row,
@@ -166,74 +157,23 @@ Service.prototype.onWord = function(userModel, data, callback) {
 		}
 
 	if (battle) {
-
-		// определяю данные сторон (сторона 1 - отправитель, 2- получатель)
-		if (battle.sides[0].u.id == userModel.id) {
-			side1 = battle.sides[0];
-			side2 = battle.sides[1];
-		} else {
-			side1 = battle.sides[1];
-			side2 = battle.sides[0];
-		}
 	
+		if (battle.sides[0].u.id == userModel.id) {
+			side = battle.sides[0];
+		} else {
+			side = battle.sides[1];
+		}
+
 		// проверка слова
 		data.word.forEach(function(item) {
-			if (side1.letters[item.id]) {
-				word += side1.letters[item.id].letter;
+			if (side.letters[item.id]) {
+				word += side.letters[item.id].letter;
 			}
 		});
 
 		if (word.length == data.word.length) {
 			if (dictionary.hasWord(word)) {
-				
-				// обновляю состояние источника
-				side1.isFull = false;
-				data.word.forEach(function(item) {
-					delete side1.letters[item.id];
-				});
-				innerFillSrc(side1.letters);
-
-				// обновляю состояние получателя
-				if (side2.isFull) {
-					innerFillLastHit(side2.letters, word);
-					side1.isWin = true;
-				} else {
-					side2.isFull = innerFillDest(side2.letters, word);
-				}
-// side1.isWin = true;
-				// рассылаю данные на клиент
-				hit = {
-					index: ++battle.hitIndex,
-					owner_id: userModel.id,
-					src: side1.letters,
-					dest: side2.letters,
-					quality: word.length < 5 ? 1 : (word.length < 6 ? 2 : 3),
-					finished: side1.isWin,
-				}
-
-				if (side1.isWin) {
-
-					// прибиваю объект боя
-					delete me.battles[battleId];
-
-					rating.finishBattle(battle, function(err, result) {
-						me.api.pushFinish(side1.u, {
-							hit: hit,
-							user: side1.u.asJson('info;counters;bindings;timed;buffs;rating'),
-							result: result,
-						});
-						me.api.pushFinish(side2.u, {
-							hit: hit,
-							user: side2.u.asJson('info;counters;bindings;timed;buffs;rating'),
-							result: result,
-						});
-					});
-
-				} else {
-					me.api.pushHit(side1.u, {hit: hit});
-					me.api.pushHit(side2.u, {hit: hit});
-				}
-
+				battle.addHit(userModel, data);
 				callback(null);
 			} else {
 				callback(messages.getByKey('msg_word_not_found'));
@@ -244,6 +184,31 @@ Service.prototype.onWord = function(userModel, data, callback) {
 	} else {
 		callback(messages.getByKey('msg_not_active_battle'));
 	}
+}
+
+Service.prototype.onBattleRound = function(battle) {
+	this.api.pushRound(battle.sides[0].u, {battle: battle.asJson()});
+	this.api.pushRound(battle.sides[1].u, {battle: battle.asJson()});
+}
+
+Service.prototype.onBattleFinish = function(battle) {
+	var me = this;
+
+	// прибиваю объект боя
+	delete me.battles[battle.id];
+
+	rating.finishBattle(battle, function(err, result) {
+		me.api.pushFinish(battle.sides[0].u, {
+			battle: battle.asJson(),
+			user: battle.sides[0].u.asJson('info;counters;bindings;timed;buffs;rating'),
+			result: result,
+		});
+		me.api.pushFinish(battle.sides[1].u, {
+			battle: battle.asJson(),
+			user: battle.sides[1].u.asJson('info;counters;bindings;timed;buffs;rating'),
+			result: result,
+		});
+	});
 }
 
 // Создает только один экземпляр класса

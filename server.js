@@ -154,20 +154,20 @@ app.get("/info", function(req, res, next) {
 });
 
 var server = app.listen(CONFIG.port);
-var serverHttps = https.createServer({
-      key: fs.readFileSync('./ssl/private'),
-      cert: fs.readFileSync('./ssl/certificate'),
-      ca: [
-      	fs.readFileSync('./ssl/root_cert'),
-      	fs.readFileSync('./ssl/intermediate_cert'),
-      	fs.readFileSync('./ssl/cert_request')
-      ]
-    }, app).listen(CONFIG.portHttps);
+// var serverHttps = https.createServer({
+//       key: fs.readFileSync('./ssl/private'),
+//       cert: fs.readFileSync('./ssl/certificate'),
+//       ca: [
+//       	fs.readFileSync('./ssl/root_cert'),
+//       	fs.readFileSync('./ssl/intermediate_cert'),
+//       	fs.readFileSync('./ssl/cert_request')
+//       ]
+//     }, app).listen(CONFIG.portHttps);
 
 // ============ Socket IO =========
 
 var sio = sockets.listen(server);
-var sio2 = sockets.listen(serverHttps);
+// var sio2 = sockets.listen(serverHttps);
 
 sio.use(function(socket, next) {
     sessionMiddleware(socket.request, socket.request.res, next);
@@ -175,12 +175,12 @@ sio.use(function(socket, next) {
 sio.use(function(socket, next) {
     dbconnect(socket.request, socket.request.res, next);
 });
-sio2.use(function(socket, next) {
-    sessionMiddleware(socket.request, socket.request.res, next);
-});
-sio2.use(function(socket, next) {
-    dbconnect(socket.request, socket.request.res, next);
-});
+// sio2.use(function(socket, next) {
+//     sessionMiddleware(socket.request, socket.request.res, next);
+// });
+// sio2.use(function(socket, next) {
+//     dbconnect(socket.request, socket.request.res, next);
+// });
 
 // ============= Bootstrap models ==========
 

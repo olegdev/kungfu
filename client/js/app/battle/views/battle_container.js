@@ -31,91 +31,114 @@ define([
 				opponents: OpponentsView.print(this.config.side1.u, this.config.side2.u),
 			}));
 
-			this.side1Field = new BattleSide1View({
+			this.myFieldView = new BattleSide1View({
 				fieldSize: this.config.fieldSize,
 				letters: this.config.side1.letters,
 			});
 
-			this.side2Field = new BattleSide2View({
+			this.enemyFieldView = new BattleSide2View({
 				fieldSize: this.config.fieldSize,
 				letters: this.config.side2.letters,
 			});
-			this.side1Field.on('submit', function(word) {
+			this.myFieldView.on('submit', function(word) {
 				me.trigger('submit', word);
 			});
 
-			$('#battle-side1').append(this.side1Field.render().$el);
-			$('#battle-side2').append(this.side2Field.render().$el);
+			$('#battle-side1').append(this.myFieldView.render().$el);
+			$('#battle-side2').append(this.enemyFieldView.render().$el);
 
 			// sound.play('song1');
 
 		},
 
-		/**
-		 * Показ удара
-		 */
-		showHit: function(data) {
+		showRound: function(data) {
 			var me = this,
-				field1, field2;
+				mySide, enemySide;
 
-			me.isBusy = true;
-
-			// определяю чей лог пришел
-			if (me.config.side1.u.id == data.owner_id) {
-				field1 = me.side1Field;
-				field2 = me.side2Field;
+			if (data.battle.sides[0].u.id == APP.user.attributes.id) {
+				this.myFieldView.setLetters(data.battle.sides[0].letters);
+				this.enemyFieldView.setLetters(data.battle.sides[1].letters);
 			} else {
-				field1 = me.side2Field;
-				field2 = me.side1Field;
+				this.myFieldView.setLetters(data.battle.sides[1].letters);
+				this.enemyFieldView.setLetters(data.battle.sides[0].letters);
 			}
-
-			// показываю анимацию источника
-			field1.showSourceHit(data, function() {
-
-				// показываю анимацию приёмника
-				field2.showDestHit(data, function() {
-					setTimeout(function() {
-
-						if (data.finished) {
-							sound.play('hit_finished');
-							field2.animFinish(function() {
-								me.isBusy = false;	
-							});
-						} else if (data.quality == 1) {
-							// звук удара 
-							sound.play('hit_1');
-							me.isBusy = false;
-						} else if (data.quality == 2) {
-							sound.play('hit_' + data.quality);
-							field2.startBlurLetters();
-							setTimeout(function() {
-								field2.stopBlurLetters(function() {
-									//
-								});
-								me.isBusy = false;
-							}, 1000);
-						} else {
-							sound.play('hit_1');
-							// звук качественного удара
-							setTimeout(function() {
-								sound.play('hit_' + data.quality);
-							}, 200);
-
-							field2.startBlurLetters();
-							field2.smashLetters();
-							
-							setTimeout(function() {
-								field2.stopBlurLetters(function() {
-									//
-								});
-								field2.unsmashLetters();
-								me.isBusy = false;
-							}, 1500);
-						}
-					}, 200);
-				});
-			});
 		},
+
+		showFinish: function(data, callback) {
+			var me = this;
+			if (data.battle.sides[0].u.id == APP.user.attributes.id) {
+				this.myFieldView.animFinish(callback);
+			} else {
+				this.enemyFieldView.animFinish(callback);
+			}
+		},
+
+		// /**
+		//  * Показ удара
+		//  * @deprecated
+		//  */
+		// showHit: function(data) {
+		// 	var me = this,
+		// 		field1, field2;
+
+		// 	me.isBusy = true;
+
+		// 	// определяю чей лог пришел
+		// 	if (me.config.side1.u.id == data.owner_id) {
+		// 		field1 = me.myFieldView;
+		// 		field2 = me.enemyFieldView;
+		// 	} else {
+		// 		field1 = me.enemyFieldView;
+		// 		field2 = me.myFieldView;
+		// 	}
+
+		// 	// показываю анимацию источника
+		// 	field1.showSourceHit(data, function() {
+
+		// 		// показываю анимацию приёмника
+		// 		field2.showDestHit(data, function() {
+		// 			setTimeout(function() {
+
+		// 				if (data.finished) {
+		// 					sound.play('hit_finished');
+		// 					field2.animFinish(function() {
+		// 						me.isBusy = false;	
+		// 					});
+		// 				} else if (data.quality == 1) {
+		// 					// звук удара 
+		// 					sound.play('hit_1');
+		// 					me.isBusy = false;
+		// 				} else if (data.quality == 2) {
+		// 					sound.play('hit_' + data.quality);
+		// 					field2.startBlurLetters();
+		// 					setTimeout(function() {
+		// 						field2.stopBlurLetters(function() {
+		// 							//
+		// 						});
+		// 						me.isBusy = false;
+		// 					}, 1000);
+		// 				} else {
+		// 					sound.play('hit_1');
+		// 					// звук качественного удара
+		// 					setTimeout(function() {
+		// 						sound.play('hit_' + data.quality);
+		// 					}, 200);
+
+		// 					field2.startBlurLetters();
+		// 					field2.smashLetters();
+							
+		// 					setTimeout(function() {
+		// 						field2.stopBlurLetters(function() {
+		// 							//
+		// 						});
+		// 						field2.unsmashLetters();
+		// 						me.isBusy = false;
+		// 					}, 1500);
+		// 				}
+		// 			}, 200);
+		// 		});
+		// 	});
+		// },
 
 	});
 

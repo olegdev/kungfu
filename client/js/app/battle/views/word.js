@@ -27,7 +27,7 @@ define([
 		// @cfg
 		// letters - хеш букв игрока
 		initialize: function(config) {
-			this.config = config;
+			this.letters = config.letters;
 			
 			this.word = [];
 			this.valid = false;
@@ -43,7 +43,7 @@ define([
 		},
 
 		addLetter: function(id) {
-			this.word.push(this.config.letters[id]);
+			this.word.push(this.letters[id]);
 			this.onChange();
 			sound.play('click');
 		},
@@ -63,14 +63,10 @@ define([
 		onChange: function() {
 			var me = this,
 				word = '', valid;
-			if (this.word.length >= 3) {
-				this.word.forEach(function(item) {
-					word += item.letter;
-				});
-				valid = dictionary.checkWord(word);
-			} else {
-				valid = false;
-			}
+			this.word.forEach(function(item) {
+				word += item.letter;
+			});
+			valid = dictionary.checkWord(word);
 
 			if (valid != this.valid) {
 				this.valid = valid;

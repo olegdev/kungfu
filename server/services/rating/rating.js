@@ -33,7 +33,7 @@ Service.prototype.finishBattle = function(battle, callback) {
 	battle.sides[0].u.set('bindings', 'battle', null);
 	battle.sides[1].u.set('bindings', 'battle', null);
 
-	if (battle.sides[0].isWin) {
+	if (!battle.sides[0].isFinished) {
 		winUser = battle.sides[0].u;
 		loseUser = battle.sides[1].u;
 	} else {

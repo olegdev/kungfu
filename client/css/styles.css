@@ -287,25 +287,21 @@ button {
 	cursor: default;
 	z-index: 1;
 }
-#battle .field .letter.src-anim {
+#battle .field .letter.letter-anim1 {
 	top: -90px !important;
-	transition: top 0.5s ease;
+	transition: top 0.9s ease;
 }
-#battle .field .letter.src-anim2 {
+#battle .field-enemy .letter.letter-anim1 {
 	top: 263px !important;
-	transition: top 0.5s ease;
 }
-#battle .field .letter.dest-anim {
+#battle .field .letter.letter-anim2 {
 	background-color: #F9BD82 !important;
 	top: -90px;
-	transition: top 0.5s ease;
+	transition: top 0.9s ease;
 	z-index: 2;
 }
-#battle .field .letter.dest-anim2 {
-	background-color: #F9BD82;
+#battle .field-enemy .letter.letter-anim2 {
 	top: 263px;
-	transition: top 0.5s ease;
-	z-index: 2;
 }
 #battle .field .letter.finished {
 	transition: top 1.0s cubic-bezier(0.4, 0, 1, 1), left 1.0s ease;

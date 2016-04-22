@@ -13,7 +13,7 @@ var API = function() {
 
 	me.channel = socketsService.createChannel('battle');
 	me.channel.on('get_battle', me.cmdGetBattle, me);
-	me.channel.on('word', me.cmdWord, me);
+	me.channel.on('hit', me.cmdHit, me);
 
 	me.errorChannel = socketsService.createChannel('error');
 }
@@ -30,7 +30,7 @@ API.prototype.cmdGetBattle = function(userModel, data, callback) {
 	}
 }
 
-API.prototype.cmdWord = function(userModel, data) {
+API.prototype.cmdHit = function(userModel, data) {
 	var me = this,
 		err;
 	if (!data.word || !_.isArray(data.word)) {
@@ -45,7 +45,7 @@ API.prototype.cmdWord = function(userModel, data) {
 	if (err) {
 		me.errorChannel.push(userModel.id, 'error', {msg: err});
 	} else {
-		this.service.onWord(userModel, data, function(err) {
+		this.service.onHit(userModel, data, function(err) {
 			if (err) {
 				me.errorChannel.push(userModel.id, 'error', {msg: err});
 			}
@@ -57,8 +57,8 @@ API.prototype.pushStart = function(userModel, data) {
 	this.channel.push(userModel.id, 'start', data);
 }
 
-API.prototype.pushHit = function(userModel, data) {
-	this.channel.push(userModel.id, 'hit', data);
+API.prototype.pushRound = function(userModel, data) {
+	this.channel.push(userModel.id, 'round', data);
 }
 
 API.prototype.pushFinish = function(userModel, data) {

@@ -33,13 +33,13 @@ define([
 			}
 
 			// заголовок
-			if (side1.isWin) {
+			if (!side1.isFinished) {
 				this.title = messages.getByKey('window_title_battle_resul_win');
 			} else {
 				this.title = messages.getByKey('window_title_battle_resul_lose');
 			}
 
-			config.content = _.template(tpl)({result: config.data, isWin: side1.isWin, user: side1.u, enemy: side2.u, messages: messages, leagues: leagues, opponentsView: opponentsView});
+			config.content = _.template(tpl)({result: config.data, isWin: !side1.isFinished, user: side1.u, enemy: side2.u, messages: messages, leagues: leagues, opponentsView: opponentsView});
 			windowView.prototype.initialize.apply(this, arguments);
 
 			// sound.play('win');

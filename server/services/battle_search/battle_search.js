@@ -50,11 +50,11 @@ Service.prototype.search = function(userModel) {
 	}
 	if (!alreadyQueued) {
 		this.queue.push(userModel);
-		if (this.queue.length == 1) {
-			me.startBotIjectMonitor();
-		} else {
-			me.stopBotInjectMonitor();
-		}
+		// if (this.queue.length == 1) {
+		// 	me.startBotIjectMonitor();
+		// } else {
+		// 	me.stopBotInjectMonitor();
+		// }
 	}
 }
 
