@@ -468,6 +468,13 @@ button {
     margin: 0 !important;
 }
 
+#battle-log {
+	width: 200px;
+    position: absolute;
+    right: -222px;
+    top: 0;
+}
+
 #s1,#s2 {
 	font-size: 0px;
 	font-weight: bold;

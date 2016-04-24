@@ -4,4 +4,5 @@
 	<%= opponents %>
 	<div id="battle-side1">
 	</div>
+	<div id="battle-log"></div>
 </div>

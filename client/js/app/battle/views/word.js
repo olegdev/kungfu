@@ -45,7 +45,7 @@ define([
 		addLetter: function(id) {
 			this.word.push(this.letters[id]);
 			this.onChange();
-			sound.play('click');
+			// sound.play('click');
 		},
 
 		removeLetter: function(id) {

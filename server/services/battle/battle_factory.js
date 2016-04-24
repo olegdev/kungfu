@@ -54,11 +54,13 @@ Battle.prototype.asJson = function() {
 		sides: [{
 			u: this.sides[0].u.asJson('info;counters;'),
 			letters: this.sides[0].letters,
+			hit: this.sides[0].hit,
 			isFull: this.sides[0].isFull,
 			isFinished: this.sides[0].isFinished,
 		},{
 			u: this.sides[1].u.asJson('info;counters;'),
 			letters: this.sides[1].letters,
+			hit: this.sides[1].hit,
 			isFull: this.sides[1].isFull,
 			isFinished: this.sides[1].isFinished,
 		}]

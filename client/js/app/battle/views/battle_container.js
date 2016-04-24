@@ -6,10 +6,11 @@ define([
 	'sound/sound',
 	'battle/views/battle_side1',
 	'battle/views/battle_side2',
+	'battle/views/battle_log',
 	'location/views/opponents',
 	'text!battle/templates/battle_container.tpl',
 	'references/messages',
-], function($, _, Backbone, sound, BattleSide1View, BattleSide2View, OpponentsView, tpl, messages) {
+], function($, _, Backbone, sound, BattleSide1View, BattleSide2View, BattleLogView, OpponentsView, tpl, messages) {
 
 	var View = Backbone.View.extend({
 
@@ -19,6 +20,7 @@ define([
 		// side1
 		// side2
 		// fieldSize
+		// roundTime
 		initialize: function(config) {
 			this.config = config;
 			this.render();
@@ -47,6 +49,14 @@ define([
 			$('#battle-side1').append(this.myFieldView.render().$el);
 			$('#battle-side2').append(this.enemyFieldView.render().$el);
 
+			me.roundTime = me.config.roundTime;
+			me.roundTimer = setInterval(function() {
+				$('.vs-sign').html(Math.max(me.roundTime--,0));
+			}, 1000);
+
+			me.battleLog = new BattleLogView();
+			$('#battle-log').append(me.battleLog.render().$el);
+
 			// sound.play('song1');
 
 		},
@@ -62,15 +72,27 @@ define([
 				this.myFieldView.setLetters(data.battle.sides[1].letters);
 				this.enemyFieldView.setLetters(data.battle.sides[0].letters);
 			}
+
+			me.roundTime = this.config.roundTime;
 		},
 
 		showFinish: function(data, callback) {
 			var me = this;
-			if (data.battle.sides[0].u.id == APP.user.attributes.id) {
-				this.myFieldView.animFinish(callback);
+			if (data.battle.sides[0].isFinished) {
+				if (data.battle.sides[0].u.id == APP.user.attributes.id) {
+					this.myFieldView.animFinish(callback);
+				} else {
+					this.enemyFieldView.animFinish(callback);
+				}	
 			} else {
-				this.enemyFieldView.animFinish(callback);
+				if (data.battle.sides[1].u.id == APP.user.attributes.id) {
+					this.myFieldView.animFinish(callback);
+				} else {
+					this.enemyFieldView.animFinish(callback);
+				}
 			}
+
+			clearInterval(me.roundTimer);
 		},
 
 		// /**

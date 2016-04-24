@@ -46,6 +46,7 @@ define([
 			side1: side1,
 			side2: side2,
 			fieldSize: data.battle.fieldSize,
+			roundTime: data.battle.roundTime,
 		});
 
 		battleContainerView.on('submit', function(word) {
@@ -57,6 +58,25 @@ define([
 	/*** Новый раунд */
 	var processRound = function(data) {
 		battleContainerView.showRound(data);
+
+		var logMessage = '';
+		if (data.battle.sides[0].hit) {
+			_.each(data.battle.sides[0].hit.word, function(letter) {
+				logMessage += letter.letter;
+			});
+		} else {
+			logMessage += 'x';
+		}
+		logMessage += ' - '
+		if (data.battle.sides[1].hit) {
+			_.each(data.battle.sides[1].hit.word, function(letter) {
+				logMessage += letter.letter;
+			});
+		} else {
+			logMessage += 'x';
+		}
+
+		battleContainerView.battleLog.addMessage(logMessage);
 	}
 
 	/*** Показываю последний удар и окно результата */
