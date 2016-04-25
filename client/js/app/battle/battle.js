@@ -34,19 +34,8 @@ define([
 	var showBattle = function(data) {
 		var side1, side2;
 
-		if (data.battle.sides[0].u.id == APP.user.attributes.id) {
-			side1 = data.battle.sides[0];
-			side2 = data.battle.sides[1];
-		} else {
-			side1 = data.battle.sides[1];
-			side2 = data.battle.sides[0];
-		}
-
 		battleContainerView = new BattleContainerView({
-			side1: side1,
-			side2: side2,
-			fieldSize: data.battle.fieldSize,
-			roundTime: data.battle.roundTime,
+			battle: data.battle,
 		});
 
 		battleContainerView.on('submit', function(word) {
@@ -57,26 +46,9 @@ define([
 
 	/*** Новый раунд */
 	var processRound = function(data) {
-		battleContainerView.showRound(data);
-
-		var logMessage = '';
-		if (data.battle.sides[0].hit) {
-			_.each(data.battle.sides[0].hit.word, function(letter) {
-				logMessage += letter.letter;
-			});
-		} else {
-			logMessage += 'x';
+		if (battleContainerView) {
+			battleContainerView.showRound(data);
 		}
-		logMessage += ' - '
-		if (data.battle.sides[1].hit) {
-			_.each(data.battle.sides[1].hit.word, function(letter) {
-				logMessage += letter.letter;
-			});
-		} else {
-			logMessage += 'x';
-		}
-
-		battleContainerView.battleLog.addMessage(logMessage);
 	}
 
 	/*** Показываю последний удар и окно результата */

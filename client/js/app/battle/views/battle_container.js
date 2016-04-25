@@ -4,60 +4,64 @@ define([
 	'underscore',
 	'backbone',
 	'sound/sound',
+	'location/views/user_avatar',
 	'battle/views/battle_side1',
 	'battle/views/battle_side2',
 	'battle/views/battle_log',
-	'location/views/opponents',
+	'battle/views/battle_round',
 	'text!battle/templates/battle_container.tpl',
 	'references/messages',
-], function($, _, Backbone, sound, BattleSide1View, BattleSide2View, BattleLogView, OpponentsView, tpl, messages) {
+], function($, _, Backbone, sound, avatarView, BattleMySideView, BattleEnemySideView, BattleLogView, BattleRoundView, tpl, messages) {
 
 	var View = Backbone.View.extend({
 
 		isBusy: false, // признак занятости (выставляется перед анимацией удара)
 
 		// @cfg
-		// side1
-		// side2
-		// fieldSize
-		// roundTime
+		// battle
 		initialize: function(config) {
-			this.config = config;
+			this.battle = config.battle;
 			this.render();
 		},
 
 		render: function() {
-			var me = this;
+			var me = this,
+				mySide, enemySide;
+
+			if (me.battle.sides[0].u.id == APP.user.attributes.id) {
+				mySide = me.battle.sides[0];
+				enemySide = me.battle.sides[1];
+			} else {
+				mySide = me.battle.sides[1];
+				enemySide = me.battle.sides[0];
+			}
 
 			$(document.body).html(_.template(tpl)({
-				opponents: OpponentsView.print(this.config.side1.u, this.config.side2.u),
+				avatarView: avatarView, 
+				user: mySide.u,
+				enemy: enemySide.u,
 			}));
 
-			this.myFieldView = new BattleSide1View({
-				fieldSize: this.config.fieldSize,
-				letters: this.config.side1.letters,
+			this.roundView = new BattleRoundView({
+				el: $('#battle-round-panel'),
+				battle: me.battle,
 			});
 
-			this.enemyFieldView = new BattleSide2View({
-				fieldSize: this.config.fieldSize,
-				letters: this.config.side2.letters,
+			this.myFieldView = new BattleMySideView({
+				fieldSize: this.battle.fieldSize,
+				letters: mySide.letters,
+			});
+
+			this.enemyFieldView = new BattleEnemySideView({
+				fieldSize: this.battle.fieldSize,
+				letters: enemySide.letters,
 			});
 			this.myFieldView.on('submit', function(word) {
 				me.trigger('submit', word);
 			});
 
-			$('#battle-side1').append(this.myFieldView.render().$el);
-			$('#battle-side2').append(this.enemyFieldView.render().$el);
-
-			me.roundTime = me.config.roundTime;
-			me.roundTimer = setInterval(function() {
-				$('.vs-sign').html(Math.max(me.roundTime--,0));
-			}, 1000);
-
-			me.battleLog = new BattleLogView();
-			$('#battle-log').append(me.battleLog.render().$el);
-
-			// sound.play('song1');
+			$('.battle-side:last').append(this.myFieldView.render().$el);
+			$('.battle-side:first').append(this.enemyFieldView.render().$el);
 
 		},
 
@@ -66,101 +70,42 @@ define([
 				mySide, enemySide;
 
 			if (data.battle.sides[0].u.id == APP.user.attributes.id) {
-				this.myFieldView.setLetters(data.battle.sides[0].letters);
-				this.enemyFieldView.setLetters(data.battle.sides[1].letters);
+				this.myFieldView.onRound(data.battle.sides[0].letters);
+				this.enemyFieldView.onRound(data.battle.sides[1].letters);
 			} else {
-				this.myFieldView.setLetters(data.battle.sides[1].letters);
-				this.enemyFieldView.setLetters(data.battle.sides[0].letters);
+				this.myFieldView.onRound(data.battle.sides[1].letters);
+				this.enemyFieldView.onRound(data.battle.sides[0].letters);
 			}
-
-			me.roundTime = this.config.roundTime;
+			setTimeout(function() {
+				me.roundView.update(data.battle);
+			}, 1000);
 		},
 
 		showFinish: function(data, callback) {
 			var me = this;
+
+			var callbackWrapper = function() {
+				me.roundView.update(data.battle);
+				setTimeout(function() {
+					callback();
+				}, 2000);
+			}
+
 			if (data.battle.sides[0].isFinished) {
 				if (data.battle.sides[0].u.id == APP.user.attributes.id) {
-					this.myFieldView.animFinish(callback);
+					this.myFieldView.animFinish(callbackWrapper);
 				} else {
-					this.enemyFieldView.animFinish(callback);
+					this.enemyFieldView.animFinish(callbackWrapper);
 				}	
 			} else {
 				if (data.battle.sides[1].u.id == APP.user.attributes.id) {
-					this.myFieldView.animFinish(callback);
+					this.myFieldView.animFinish(callbackWrapper);
 				} else {
-					this.enemyFieldView.animFinish(callback);
+					this.enemyFieldView.animFinish(callbackWrapper);
 				}
 			}
 
-			clearInterval(me.roundTimer);
 		},
-
-		// /**
-		//  * Показ удара
-		//  * @deprecated
-		//  */
-		// showHit: function(data) {
-		// 	var me = this,
-		// 		field1, field2;
-
-		// 	me.isBusy = true;
-
-		// 	// определяю чей лог пришел
-		// 	if (me.config.side1.u.id == data.owner_id) {
-		// 		field1 = me.myFieldView;
-		// 		field2 = me.enemyFieldView;
-		// 	} else {
-		// 		field1 = me.enemyFieldView;
-		// 		field2 = me.myFieldView;
-		// 	}
-
-		// 	// показываю анимацию источника
-		// 	field1.showSourceHit(data, function() {
-
-		// 		// показываю анимацию приёмника
-		// 		field2.showDestHit(data, function() {
-		// 			setTimeout(function() {
-
-		// 				if (data.finished) {
-		// 					sound.play('hit_finished');
-		// 					field2.animFinish(function() {
-		// 						me.isBusy = false;	
-		// 					});
-		// 				} else if (data.quality == 1) {
-		// 					// звук удара 
-		// 					sound.play('hit_1');
-		// 					me.isBusy = false;
-		// 				} else if (data.quality == 2) {
-		// 					sound.play('hit_' + data.quality);
-		// 					field2.startBlurLetters();
-		// 					setTimeout(function() {
-		// 						field2.stopBlurLetters(function() {
-		// 							//
-		// 						});
-		// 						me.isBusy = false;
-		// 					}, 1000);
-		// 				} else {
-		// 					sound.play('hit_1');
-		// 					// звук качественного удара
-		// 					setTimeout(function() {
-		// 						sound.play('hit_' + data.quality);
-		// 					}, 200);
-
-		// 					field2.startBlurLetters();
-		// 					field2.smashLetters();
-							
-		// 					setTimeout(function() {
-		// 						field2.stopBlurLetters(function() {
-		// 							//
-		// 						});
-		// 						field2.unsmashLetters();
-		// 						me.isBusy = false;
-		// 					}, 1500);
-		// 				}
-		// 			}, 200);
-		// 		});
-		// 	});
-		// },
 
 	});
 

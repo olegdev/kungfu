@@ -223,6 +223,7 @@ button {
 	margin: 20px auto 0 auto;
 	border: none;
 	height: auto;
+	width: auto;
 	 user-select: none;
     -moz-user-select: none;
     -khtml-user-select: none;
@@ -232,10 +233,39 @@ button {
 #battle .opponents {
 	margin: 14px 0 0 27px;
 }
-#battle-side2 .field .letter {
-	/*-webkit-transform: rotate(180deg);
-	-moz-transform: rotate(180deg);
-    -o-transform: rotate(180deg);*/
+#battle .battle-side {
+	width: 570px;
+	margin: 0 auto;
+	position: relative;
+}
+#battle .battle-side .user-avatar {
+	position: absolute;
+}
+#battle .battle-side .enemy-avatar {
+	right: 0px;
+	bottom: 0px;
+}
+#battle-round-panel {
+	margin: 5px 0;
+	text-align: center;
+	font-size: 16px;
+	font-weight: bold;
+}
+#battle-round-panel .word {
+	display: inline-block;
+	text-align: right;
+	min-width: 200px;
+	font-weight: normal;
+	color: #357f96;
+	font-size: 18px;
+}
+#battle-round-panel .word:last-child {
+	text-align: left;
+}
+#battle-round-panel #round-timer {
+	width: 80px;
+	display: inline-block;
+	color: #E89B62;
 }
 #battle .field {
 	width: 236px;
@@ -276,8 +306,9 @@ button {
     background-color: #AFCBE6;
     color: #444;
 }
-#battle-side2 .field .letter {
-	cursor: default;
+#battle .field-enemy .letter,
+#battle .field.blocked .letter {
+	cursor: default !important;
 }
 #battle .field .letter.selected {
 	background-color: #7CA5CC;

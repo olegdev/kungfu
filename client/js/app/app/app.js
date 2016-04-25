@@ -7,7 +7,8 @@ define([
 	'dictionary/dictionary',
 	'social/social',
 	'sound/sound',
-], function(Logger, sockets, UserModel, battle, location, dictionary, social, sound) {
+	'date/date',
+], function(Logger, sockets, UserModel, battle, location, dictionary, social, sound, date) {
 
 	var logger = new Logger("app");
 
@@ -17,6 +18,8 @@ define([
 				config: config,
 				user: new UserModel(config.user),
 			};
+
+			date.init(config.serverTimeNow);
 
 			if (APP.config.debug) {
 				Logger.enableInfoLog();

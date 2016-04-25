@@ -1,8 +1,10 @@
 <div id="battle">
-	<div id="battle-side2">
+	<div class="battle-side">
+		<%= avatarView.print(enemy, 'rtl enemy-avatar') %>
 	</div>
-	<%= opponents %>
-	<div id="battle-side1">
+	<div id="battle-round-panel"></div>
+	<div class="battle-side">
+		<%= avatarView.print(user) %>
 	</div>
 	<div id="battle-log"></div>
 </div>

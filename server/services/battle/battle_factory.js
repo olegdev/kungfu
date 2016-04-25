@@ -50,7 +50,11 @@ Battle.prototype.asJson = function() {
 		id: this.id,
 		type: this.type,
 		fieldSize: this.fieldSize,
-		roundTime: config.roundTime,
+		round: {
+			index: this.roundIndex,
+			started: this.startRoundTime,
+			duration: config.roundTime,
+		},
 		sides: [{
 			u: this.sides[0].u.asJson('info;counters;'),
 			letters: this.sides[0].letters,
@@ -68,12 +72,10 @@ Battle.prototype.asJson = function() {
 }
 
 Battle.prototype.addHit = function(userModel, hit) {
-	if (this.sides[0].u.id == userModel.id) {
-		this.sides[0].hit = hit;
-	} else {
-		this.sides[1].hit = hit;
-	}
-	if (this.sides[0].hit && this.sides[1].hit) {
+	this.hits = this.hits || {};
+	this.hits[userModel.id] = hit;
+
+	if (Object.keys(this.hits).length == 2) {
 		this._finishRound();
 	}
 }
@@ -89,6 +91,7 @@ Battle.prototype._startRound = function() {
 		me._finishRound();
 	}, config.roundTime * 1000);
 
+	me.startRoundTime = Date.now();
 }
 
 Battle.prototype._finishRound = function() {
@@ -97,7 +100,10 @@ Battle.prototype._finishRound = function() {
 
 	this.roundIndex++;
 
-	if (this.sides[0].hit || this.sides[1].hit) {
+	if (this.hits) {
+		this.sides[0].hit = this.hits[this.sides[0].u.id];
+		this.sides[1].hit = this.hits[this.sides[1].u.id];
+
 		this._processHit(this.sides[0], this.sides[1]);
 		this._processHit(this.sides[1], this.sides[0]);
 
@@ -107,18 +113,19 @@ Battle.prototype._finishRound = function() {
 		}
 	} else {
 		// increase empty rounds count
+		this.sides[0].hit = false;
+		this.sides[1].hit = false;
 	}
 
 	if (this.sides[0].isFinished || this.sides[1].isFinished) {
 		clearTimeout(this.roundTimer);
 		this.emit('finish', this);
 	} else {
-		this.emit('round', this);
 		this._startRound();
+		this.emit('round', this);
 	}
 
-	this.sides[0].hit = false;
-	this.sides[1].hit = false;
+	this.hits = null;
 }
 
 Battle.prototype._processHit = function(side1, side2) {

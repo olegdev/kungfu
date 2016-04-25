@@ -39,6 +39,7 @@ define([
 			this.$el.html(this.template({
 				word: this.word,
 				messages: messages,
+				waitRound: this.waitingRound,
 			}));
 		},
 
@@ -90,6 +91,7 @@ define([
 			if (this.$el.hasClass('valid')) {
 				this.trigger('submit', this.word);
 				this.word = [];
+				this.waitingRound = true;
 				this.onChange();
 			}
 		},
@@ -98,7 +100,13 @@ define([
 			this.trigger('clear');
 			this.word = [];
 			this.onChange();			
-		}
+		},
+
+		onRound: function(letters) {
+			this.letters = letters;
+			this.waitingRound = false;
+			this.render();
+		},
 
 	});
 
