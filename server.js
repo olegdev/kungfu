@@ -86,6 +86,7 @@ app.get("/", function(req, res, next) {
 		getConfig
 			.getConfig(req.session.uid, function(err, config) {
 				if (!err && config) {
+					config.serverTimeNow = Date.now();
 					app.locals.config = JSON.stringify(config);
 					if (config.debug) {
 						app.locals.debug = JSON.stringify(config.debug);						
